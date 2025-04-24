@@ -27,6 +27,7 @@ import { formatPrismToken } from './utils/prism'
 import { Signature } from './components/signature/Signature'
 import { debounce, nextTick, scrollIntoView } from './utils'
 import { IEditorHTML } from './editor/interface/Editor'
+import { renderElementListToHtml } from './renderHtml'
 
 window.onload = function () {
   const isApple =
@@ -1817,8 +1818,10 @@ window.onload = function () {
   handleContentChange()
 
   instance.listener.saved = function (payload) {
-    console.log('elementList: ', payload)
+    // console.log('elementList: ', payload)
     console.log(instance.command.getValue())
+    const html = renderElementListToHtml(instance.command.getValue().data.main)
+    console.log(html)
   }
 
   // 9. 右键菜单注册

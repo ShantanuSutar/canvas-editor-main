@@ -610,11 +610,12 @@ interface IZipElementListOption {
   isClassifyArea?: boolean
   isClone?: boolean
 }
+
 export function zipElementList(
   payload: IElement[],
   options: IZipElementListOption = {}
 ): IElement[] {
-  // 1) Always preserve these props
+  // 1) Always preserve these props on every element
   const defaultAttrs: Array<keyof IElement> = ['color', 'groupIds', 'variable']
   const supplied = options.extraPickAttrs || []
   const extraPickAttrs = Array.from(
@@ -622,130 +623,149 @@ export function zipElementList(
   ) as Array<keyof IElement>
 
   const { isClassifyArea = false, isClone = true } = options
-  const elementList = isClone ? deepClone(payload) : payload
-  const zipList: IElement[] = []
+  const list = isClone ? deepClone(payload) : payload
+  const out: IElement[] = []
   let e = 0
 
-  while (e < elementList.length) {
-    let element = elementList[e]
+  while (e < list.length) {
+    const el = list[e]
 
-    // Skip leading ZERO placeholder if it's the first char
+    // —————————————————————————————
+    // A) GROUP “RAW” TITLE FRAGMENTS
+    // Elements that carry titleId+level but have not yet been turned into a TITLE node
+    // —————————————————————————————
+    if (el.titleId && el.level && el.type !== ElementType.TITLE) {
+      const tid = el.titleId!
+      const lvl = el.level!
+      const buf: IElement[] = []
+
+      // collect all fragments of this same titleId
+      while (e < list.length && list[e].titleId === tid) {
+        const frag = list[e]
+        delete frag.title
+        delete frag.level
+        buf.push(frag)
+        e++
+      }
+
+      // recursively zip those fragments
+      const children = zipElementList(buf, options)
+
+      // build one real TITLE node
+      const titleNode: IElement = {
+        type: ElementType.TITLE,
+        value: '',
+        level: lvl,
+        valueList: children
+      }
+      if (children.some(c => c.variable)) {
+        titleNode.variable = true
+      }
+
+      out.push(titleNode)
+      continue
+    }
+
+    // —————————————————————————————
+    // B) SHORT-CIRCUIT EXISTING TITLE NODES
+    // so we never lose first letters if we re-zip
+    // —————————————————————————————
+    if (el.type === ElementType.TITLE) {
+      out.push(deepClone(el))
+      e++
+      continue
+    }
+
+    // —————————————————————————————
+    // C) SKIP leading ZERO placeholder
+    // —————————————————————————————
     if (
       e === 0 &&
-      element.value === ZERO &&
-      !element.listId &&
-      (!element.type || element.type === ElementType.TEXT)
+      el.value === ZERO &&
+      !el.listId &&
+      (!el.type || el.type === ElementType.TEXT)
     ) {
       e++
       continue
     }
 
-    // —— AREA grouping ——
-    if (element.areaId && element.area) {
-      const aid = element.areaId
-      const area = element.area
-      const vals: IElement[] = []
-
-      // Collect all same-areaId elements
-      while (e < elementList.length && elementList[e].areaId === aid) {
-        const a = elementList[e]
+    // —————————————————————————————
+    // D) AREA grouping
+    // —————————————————————————————
+    if (el.areaId && el.area) {
+      const aid = el.areaId!
+      const area = el.area!
+      const buf: IElement[] = []
+      while (e < list.length && list[e].areaId === aid) {
+        const a = list[e]
         delete a.area
         delete a.areaId
-        vals.push(a)
+        buf.push(a)
         e++
       }
-
-      const children = zipElementList(vals, options)
+      const children = zipElementList(buf, options)
       if (isClassifyArea) {
-        element = {
+        out.push({
           type: ElementType.AREA,
           value: '',
           areaId: aid,
           area,
           valueList: children
-        } as any
+        } as any)
       } else {
-        zipList.push(...children)
-        continue
+        out.push(...children)
       }
+      continue
     }
 
-    // —— TITLE grouping ——
-    else if (element.titleId && element.level) {
-      const tid = element.titleId
-      const lvl = element.level
-      const raw: IElement[] = []
+    // —————————————————————————————
+    // E) LIST grouping
+    // —————————————————————————————
+    if (el.listId && el.listType) {
+      const lid = el.listId!
+      const listType = el.listType!
+      const style = (el as any).listStyle
+      const buf: IElement[] = []
       e++
-
-      while (e < elementList.length && elementList[e].titleId === tid) {
-        const t = elementList[e]
-        delete t.title
-        delete t.level
-        raw.push(t)
-        e++
-      }
-
-      const children = zipElementList(raw, options)
-      const titleEl: IElement = {
-        type: ElementType.TITLE,
-        title: (element as any).title,
-        titleId: tid,
-        value: '',
-        level: lvl,
-        valueList: children
-      }
-      // bubble up variable flag
-      if (children.some(c => c.variable)) {
-        titleEl.variable = true
-      }
-      element = titleEl
-    }
-
-    // —— LIST grouping ——
-    else if (element.listId && element.listType) {
-      const lid = element.listId
-      const ltype = element.listType
-      const style = (element as any).listStyle
-      const raw: IElement[] = []
-      e++
-
-      while (e < elementList.length && elementList[e].listId === lid) {
-        const l = elementList[e]
+      while (e < list.length && list[e].listId === lid) {
+        const l = list[e]
         delete l.listType
         delete (l as any).listStyle
-        raw.push(l)
+        buf.push(l)
         e++
       }
-
-      element = {
+      out.push({
         type: ElementType.LIST,
         value: '',
         listId: lid,
-        listType: ltype,
+        listType,
         listStyle: style,
-        valueList: zipElementList(raw, options)
-      } as any
+        valueList: zipElementList(buf, options)
+      } as any)
+      continue
     }
 
-    // —— TABLE merging ——
-    else if (element.type === ElementType.TABLE) {
-      // merge paged pieces
-      if ((element as any).pagingId) {
+    // —————————————————————————————
+    // F) TABLE merging & grouping
+    // —————————————————————————————
+    if (el.type === ElementType.TABLE) {
+      // merge paged tables
+      if ((el as any).pagingId) {
         let idx = e + 1
         while (
-          idx < elementList.length &&
-          elementList[idx].pagingId === (element as any).pagingId
+          idx < list.length &&
+          list[idx].pagingId === (el as any).pagingId
         ) {
-          const nxt = elementList[idx]
-          element.height! += nxt.height!
-          element.trList!.push(...nxt.trList!)
+          const nxt = list[idx]
+          el.height! += nxt.height!
+          el.trList!.push(...nxt.trList!)
           idx++
         }
         e = idx - 1
       }
-      // rebuild rows
-      if (element.trList) {
-        element.trList.forEach(tr => {
+      // rebuild each row’s tdList
+      if (el.trList) {
+        el.trList.forEach(tr => {
           delete (tr as any).id
           tr.tdList = tr.tdList.map(td => {
             const zipped = zipElementList(td.value, {
@@ -753,13 +773,11 @@ export function zipElementList(
               isClassifyArea: false,
               extraPickAttrs
             })
-            // pull through any TABLE_TD_ZIP_ATTR
             const extras = TABLE_TD_ZIP_ATTR.reduce((acc, attr) => {
               const v = (td as any)[attr]
               if (v !== undefined) (acc as any)[attr] = v
               return acc
             }, {} as Partial<ITd>)
-
             return {
               colspan: td.colspan,
               rowspan: td.rowspan,
@@ -769,79 +787,81 @@ export function zipElementList(
           })
         })
       }
+      out.push(pickElementAttr(el, { extraPickAttrs }))
+      e++
+      continue
     }
 
-    // —— HYPERLINK grouping ——
-    else if (
-      element.type === ElementType.HYPERLINK &&
-      (element as any).hyperlinkId
-    ) {
-      const hid = (element as any).hyperlinkId
-      const raw: IElement[] = []
+    // —————————————————————————————
+    // G) HYPERLINK grouping
+    // —————————————————————————————
+    if (el.type === ElementType.HYPERLINK && (el as any).hyperlinkId) {
+      const hid = (el as any).hyperlinkId
+      const buf: IElement[] = []
       e++
-
-      while (
-        e < elementList.length &&
-        (elementList[e] as any).hyperlinkId === hid
-      ) {
-        const h = elementList[e]
+      while (e < list.length && (list[e] as any).hyperlinkId === hid) {
+        const h = list[e]
         delete h.url
         delete (h as any).type
-        raw.push(h)
+        buf.push(h)
         e++
       }
-
-      element = {
+      out.push({
         type: ElementType.HYPERLINK,
         value: '',
-        url: (element as any).url,
-        valueList: zipElementList(raw, options)
-      } as any
+        url: (el as any).url,
+        valueList: zipElementList(buf, options)
+      } as any)
+      continue
     }
 
-    // —— DATE grouping ——
-    else if (element.type === ElementType.DATE && (element as any).dateId) {
-      const did = (element as any).dateId
-      const raw: IElement[] = []
+    // —————————————————————————————
+    // H) DATE grouping
+    // —————————————————————————————
+    if (el.type === ElementType.DATE && (el as any).dateId) {
+      const did = (el as any).dateId
+      const buf: IElement[] = []
       e++
-
-      while (e < elementList.length && (elementList[e] as any).dateId === did) {
-        const d = elementList[e]
+      while (e < list.length && (list[e] as any).dateId === did) {
+        const d = list[e]
         delete (d as any).dateFormat
         delete d.type
-        raw.push(d)
+        buf.push(d)
         e++
       }
-
-      element = {
+      out.push({
         type: ElementType.DATE,
         value: '',
-        dateFormat: (element as any).dateFormat,
-        valueList: zipElementList(raw, options)
-      } as any
+        dateFormat: (el as any).dateFormat,
+        valueList: zipElementList(buf, options)
+      } as any)
+      continue
     }
 
-    // —— CONTROLS (unchanged) ——
-    else if ((element as any).controlId) {
-      // [your existing control logic here…]
+    // —————————————————————————————
+    // I) CONTROL grouping (unchanged)
+    // —————————————————————————————
+    if ((el as any).controlId) {
+      // [your existing control logic goes here…]
       e++
+      continue
     }
 
-    // —— FINAL PACK & MERGE TEXT RUNS ——
-    const pickEl = pickElementAttr(element, { extraPickAttrs })
-    if (element.variable) pickEl.variable = true
+    // —————————————————————————————
+    // J) DEFAULT: merge adjacent TEXT/SUP/SUB runs
+    // —————————————————————————————
+    const pickEl = pickElementAttr(el, { extraPickAttrs })
+    if (el.variable) pickEl.variable = true
 
     if (
-      !element.type ||
-      element.type === ElementType.TEXT ||
-      element.type === ElementType.SUBSCRIPT ||
-      element.type === ElementType.SUPERSCRIPT
+      !el.type ||
+      el.type === ElementType.TEXT ||
+      el.type === ElementType.SUBSCRIPT ||
+      el.type === ElementType.SUPERSCRIPT
     ) {
-      let mergedVar = !!element.variable
-
-      // Merge all adjacent runs that match style
+      let mergedVar = !!el.variable
       while (true) {
-        const nxt = elementList[e + 1]
+        const nxt = list[e + 1]
         if (
           nxt &&
           isSameElementExceptValue(
@@ -849,24 +869,23 @@ export function zipElementList(
             pickElementAttr(nxt, { extraPickAttrs })
           )
         ) {
-          e++ // absorb it
+          e++
           pickEl.value += nxt.value === ZERO ? '\n' : nxt.value
           if (nxt.variable) mergedVar = true
           continue
         }
         break
       }
-
-      e++ // consume this run
+      e++
       if (mergedVar) pickEl.variable = true
     } else {
-      e++ // non-text elements just move on
+      e++
     }
 
-    zipList.push(pickEl)
+    out.push(pickEl)
   }
 
-  return zipList
+  return out
 }
 
 export function convertTextAlignToRowFlex(node: HTMLElement) {
