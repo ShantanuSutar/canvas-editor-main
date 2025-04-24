@@ -605,7 +605,7 @@ export function pickElementAttr(
   return element
 }
 
-export interface IZipElementListOption {
+interface IZipElementListOption {
   extraPickAttrs?: Array<keyof IElement>
   isClassifyArea?: boolean
   isClone?: boolean

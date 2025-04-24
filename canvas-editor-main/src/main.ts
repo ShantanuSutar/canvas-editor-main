@@ -1816,10 +1816,10 @@ window.onload = function () {
   instance.listener.contentChange = debounce(handleContentChange, 200)
   handleContentChange()
 
-  // instance.listener.saved = function (payload) {
-  //   console.log('elementList: ', payload)
-  //   console.log(instance.command.getValue())
-  // }
+  instance.listener.saved = function (payload) {
+    console.log('elementList: ', payload)
+    console.log(instance.command.getValue())
+  }
 
   // 9. 右键菜单注册
   instance.register.contextMenuList([
