@@ -167,6 +167,7 @@ export type IElement = IElementBasic &
      * True if this element (or any merged run) came from a mapped {{variable}} span
      */
     variable?: boolean
+    // varKey?: string
   }
 
 export interface IElementMetrics {

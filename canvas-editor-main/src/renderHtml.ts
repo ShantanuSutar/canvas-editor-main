@@ -19,9 +19,9 @@ export function renderElementListToHtml(elements: IElement[]): string {
   let i = 0
 
   // Utility to consume N elements
-  function next(): IElement | null {
-    return elements[++i] || null
-  }
+  // function next(): IElement | null {
+  //   return elements[++i] || null
+  // }
 
   while (i < elements.length) {
     const el = elements[i]

@@ -6,7 +6,6 @@ import {
   ListType,
   TitleLevel
 } from './editor'
-import { JSDOM } from 'jsdom'
 
 const tempData = {
   report_name: 'Default Report',
@@ -496,15 +495,21 @@ const htmlContent = tempData.content
 const variablesMap: Record<string, string> = tempData.variables.mapped || {}
 
 // 2) DOMParser / jsdom 兼容层
+// NO static import of jsdom up top!
+
 let document: Document
-declare const window: any
+
 if (typeof window !== 'undefined' && window.DOMParser) {
+  // Browser path
   document = new DOMParser().parseFromString(htmlContent, 'text/html')
 } else {
+  // Server path – dynamically require JSDOM so bundlers won’t include it in the client bundle
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
   const { JSDOM } = require('jsdom')
-  const dom = new JSDOM(htmlContent)
-  document = dom.window.document
+  document = new JSDOM(htmlContent).window.document
 }
+
+// …proceed with traverse(document.body)…
 
 // 3) 准备输出、常量与映射
 const elementList: IElement[] = []
