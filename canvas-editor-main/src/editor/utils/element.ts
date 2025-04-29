@@ -45,7 +45,7 @@ import { RowFlex } from '../dataset/enum/Row'
 import { TableBorder, TdBorder } from '../dataset/enum/table/Table'
 import { DeepRequired } from '../interface/Common'
 import { IEditorOption } from '../interface/Editor'
-import { IElement } from '../interface/Element'
+import { IElement, IListElement } from '../interface/Element'
 import { IRowElement } from '../interface/Row'
 import { ITd } from '../interface/table/Td'
 import { ITr } from '../interface/table/Tr'
@@ -614,74 +614,91 @@ export function zipElementList(
   payload: IElement[],
   options: IZipElementListOption = {}
 ): IElement[] {
-  // 1) Always preserve these props on every element
+  // Always preserve these props
   const defaultAttrs: Array<keyof IElement> = [
     'color',
     'groupIds',
     'variable',
-    'variableName' // ← pull this through
+    'variableName'
   ]
-
-  // merge in any user extras
   const supplied = options.extraPickAttrs || []
   const extraPickAttrs = Array.from(
     new Set<keyof IElement>([...supplied, ...defaultAttrs])
   ) as Array<keyof IElement>
 
-  const { isClassifyArea = false, isClone = true } = options
-  const list = isClone ? deepClone(payload) : payload
+  const list = options.isClone !== false ? deepClone(payload) : payload
   const out: IElement[] = []
   let e = 0
 
   while (e < list.length) {
     const el = list[e]!
 
-    // … your grouping logic here …
+    // … your existing grouping logic for TITLE, TABLE, LIST, etc. …
 
-    // —— DEFAULT: merge adjacent TEXT/SUP/SUB runs ——
-    // at the bottom, after you’ve built or grouped `pickEl`:
+    //
+    // ─── DEFAULT: merge adjacent TEXT/SUP/SUB runs ───
+    //
     const pickEl = pickElementAttr(el, { extraPickAttrs })
 
-    // if original had variableName, keep it
+    // if original fragment carried variableName, pass it through
     if (el.variableName !== undefined) {
       pickEl.variableName = el.variableName
     }
 
-    // merge runs of identical style & carry variableName through
+    // Only merge when it's a plain text‐like run
     if (
       !el.type ||
       el.type === ElementType.TEXT ||
       el.type === ElementType.SUBSCRIPT ||
       el.type === ElementType.SUPERSCRIPT
     ) {
+      // Track whether this run or any merged fragments should be variable
       let mergedVar = !!el.variable
+      // Track the running variableName (if any)
       let mergedName = el.variableName
-      // keep merging as before…
+
       while (true) {
         const nxt = list[e + 1]
-        if (
-          nxt &&
-          isSameElementExceptValue(
-            pickEl,
-            pickElementAttr(nxt, { extraPickAttrs })
-          )
-        ) {
+        if (!nxt) break
+
+        // 1) If same style (font, bold, etc.), can merge
+        const sameStyle = isSameElementExceptValue(
+          pickEl,
+          pickElementAttr(nxt, { extraPickAttrs })
+        )
+
+        // 2) NEW: “inside” a variable region if groupIds match
+        const varKey = pickEl.groupIds?.[0]
+        const insideVarRegion = varKey && nxt.groupIds?.[0] === varKey
+
+        if (sameStyle || insideVarRegion) {
+          // consume it
           e++
-          // append text
+          // append its text (ZERO placeholder → newline)
           pickEl.value += nxt.value === ZERO ? '\n' : nxt.value
-          // if next had a variableName, override
+
+          // If the next fragment has its own variableName, update
           if (nxt.variableName !== undefined) {
             mergedVar = true
             mergedName = nxt.variableName
+          }
+          // If it has no variableName but is “insideVarRegion”, keep mergedName
+          if (insideVarRegion) {
+            mergedVar = true
           }
           continue
         }
         break
       }
+
+      // finalize flags
       if (mergedVar) pickEl.variable = true
       if (mergedName !== undefined) pickEl.variableName = mergedName
+
+      // advance cursor
       e++
     } else {
+      // non-text runs just advance
       e++
     }
 

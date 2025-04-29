@@ -1167,6 +1167,8 @@ export class Draw {
       footer: zipElementList(originData.footer, { extraPickAttrs })
     }
 
+    console.log('get', data)
+
     return {
       version,
       data,
