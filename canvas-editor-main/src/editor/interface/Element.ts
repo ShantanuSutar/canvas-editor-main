@@ -168,6 +168,7 @@ export type IElement = IElementBasic &
      */
     variable?: boolean
     // varKey?: string
+    variableName?: string
   }
 
 export interface IElementMetrics {

@@ -13,30 +13,30 @@ const tempData = {
   user: 'Shantanu Sutar',
   created_at: '2025-04-14T10:19:46.371Z',
   content:
-    '<p>Common stock valuation for</p>\n<h2 id="revelar-biotherapeutics-inc"><span data-value="COMPANY_NAME" class="variable"><span data-value="COMPANY_NAME" class="variable">{{COMPANY_NAME}}</span></span></h2>\n<p>Valuation Date: <span data-value="VALUATION_DATE" class="variable"><span data-value="VALUATION_DATE" class="variable">{{VALUATION_DATE}}</span></span></p>\n<table border="1" style="border-collapse: collapse; width: 100%;"><thead><tr><td colspan="3" style="text-align: center; font-weight: bold;">Revelar Biotherapeutics, Inc. Financials as of Year End </td></tr></thead><tbody><tr><td></td><td>2021</td><td>2022</td></tr><tr><td>Revenue</td><td>0</td><td>0</td></tr><tr><td>EBITDA</td><td>-3096843</td><td>-19582000</td></tr><tr><td></td><td>Actual </td><td>Expected</td></tr><thead><tr><td colspan="3" style="text-align: center; font-weight: bold;">Revelar Biotherapeutics, Inc. Balance Sheet as of Year End</td></tr></thead><tbody><tr><td></td><td>2021</td><td></td></tr><tr><td>Cash & Cash Equivalents</td><td>3545941</td><td></td></tr><tr><td>Interest Bearing Liabilities</td><td>8500000</td><td></td></tr></tbody></table><p>Prepared by <span data-value="PREPARED_BY" class="variable"><span data-value="PREPARED_BY" class="variable">{{PREPARED_BY}}</span></span> on <span data-value="VALUATION_DATE" class="variable"><span data-value="VALUATION_DATE" class="variable">{{VALUATION_DATE}}</span></span></p>\n<p><span data-value="CEO_NAME" class="variable"><span data-value="CEO_NAME" class="variable">{{CEO_NAME}}</span></span><br><span data-value="VALUATION_DATE" class="variable"><span data-value="VALUATION_DATE" class="variable">{{VALUATION_DATE}}</span></span></p>\n<h5>Chief Executive Officer</h5>\n<h3 id="revelar-biotherapeutics-inc-1"><span data-value="COMPANY_NAME" class="variable"><span data-value="COMPANY_NAME" class="variable">{{COMPANY_NAME}}</span></span></h3>\n<h6><span data-value="ADDRESS" class="variable"><span data-value="ADDRESS" class="variable">{{ADDRESS}}</span></span></h6>\n<!-- pagebreak -->\n<h3 id="table-of-contents">TABLE OF CONTENTS</h3>\n<ul>\n<li>Introduction / Letter of Engagement</li>\n<li>Standard of Value</li>\n<li>Scope of Engagement</li>\n<li>Scope of Analysis</li>\n<li>Valuation Summary</li>\n<li>Company Overview &amp; Company Update</li>\n<li><span data-value="COMPANY_NAME" class="variable"><span data-value="COMPANY_NAME" class="variable">{{COMPANY_NAME}}</span></span> Financials</li>\n<li>Capitalization</li>\n<li>Valuation Methodology Summary</li>\n<li>Report Certification</li>\n<li>Appraiser Bio &amp; Credentials</li>\n<li>Statement of Assumptions and Limiting Conditions</li>\n<li>Appendix (Economic Overview, Major Products, Operating Conditions, Valuation Methodologies, Allocation)</li>\n</ul>\n<!-- pagebreak -->\n<h3 id="introduction-letter-of-engagement">Introduction / Letter of Engagement</h3>\n<p><span data-value="CEO_NAME" class="variable"><span data-value="CEO_NAME" class="variable">{{CEO_NAME}}</span></span> March 9, 2022 <br>Chief Executive Officer <br><span data-value="FINANCIALS" class="variable"><span data-value="FINANCIALS" class="variable">{{FINANCIALS}}</span></span> <br>9630 Eagle Ridge Drive Bethesda, MD 20817 <br>This report details the valuation analysis used to derive the fair market value of the common equity of <span data-value="COMPANY_NAME" class="variable"><span data-value="COMPANY_NAME" class="variable">{{COMPANY_NAME}}</span></span> (hereinafter referred to as “<span data-value="COMPANY_NAME" class="variable"><span data-value="COMPANY_NAME" class="variable">{{COMPANY_NAME}}</span></span>” or the “Company”) on a per share basis (“Subject Interest”) as of <span data-value="VALUATION_DATE" class="variable"><span data-value="VALUATION_DATE" class="variable">{{VALUATION_DATE}}</span></span>. It is understood that the valuation of the Subject Interest, as developed in this report, will be used for tax planning and financial reporting purposes in recognition of Internal Revenue Code Section 409A (“409A”) and FASB Accounting Standards Codification Topic 718 - Stock Compensation (“ASC 718”). As such, this report should not be used for any other purpose.</p>\n<p>The analysis was prepared following the guidance of the American Institute of Certified Public Accountants (“AICPA”) Accounting and Valuation Guide: Valuation of Privately-Held-Company Equity Securities Issued as Compensation (the “AICPA Guide”).</p>\n<h3 id="standard-of-value">STANDARD OF VALUE</h3>\n<p>For income tax purposes, the appropriate standard of value is fair market value ("FMV"), which is defined as:</p>\n<h6>The price, expressed in terms of cash equivalents, at which such property would change hands between a hypothetical willing and able buyer and a hypothetical willing and able seller, acting at arms length in an open and unrestricted market, when neither is under compulsion to buy or to sell, and when both have reasonable knowledge of relevant facts.</h6>\n<p>For financial reporting purposes, the appropriate standard of value is fair value ("FV"), which is defined as:</p>\n<h6>The amount at which an asset (or liability) could be bought (or incurred) or sold (or settled) in a current transaction between willing parties, that is, other than in a forced or liquidation sale.</h6>\n<p>As noted in the FASB Board meeting of May ',
-  variables: {
-    mapped: {
-      ADDRESS: '9630 Eagle Ridge Drive Bethesda, MD 20817',
-      CEO_NAME: 'Glenn Marina',
-      FINANCIALS:
-        '<table border="1" style="border-collapse: collapse; width: 100%;"><thead><tr><td colspan="3" style="text-align: center; font-weight: bold;">Revelar Biotherapeutics, Inc. Financials as of Year End </td></tr></thead><tbody><tr><td></td><td>2021</td><td>2022</td></tr><tr><td>Revenue</td><td>0</td><td>0</td></tr><tr><td>EBITDA</td><td>-3096843</td><td>-19582000</td></tr><tr><td></td><td>Actual </td><td>Expected</td></tr><thead><tr><td colspan="3" style="text-align: center; font-weight: bold;">Revelar Biotherapeutics, Inc. Balance Sheet as of Year End</td></tr></thead><tbody><tr><td></td><td>2021</td><td></td></tr><tr><td>Cash & Cash Equivalents</td><td>3545941</td><td></td></tr><tr><td>Interest Bearing Liabilities</td><td>8500000</td><td></td></tr></tbody></table>',
-      COMPANY_NAME: 'Revelar Biotherapeutics, Inc.',
-      VALUATION_DATE: '2021-12-31 ',
-      CAPITALIZATION_TABLE:
-        '<table border="1" style="border-collapse: collapse; width: 100%;"><thead><tr><td colspan="13" style="text-align: center; font-weight: bold;">Revelar Biotherapeutics, Inc. Capitalization Table (Share Classes) as of December 31, 2021</td></tr></thead><tbody><tr><td>Outstanding Shares</td><td>Shares Outstanding </td><td>Warrants</td><td>Options</td><td>Total</td><td>Issue Price</td><td>Liquidation Preference</td><td>Multiplier</td><td>Dividend Type</td><td>Dividend Rate</td><td>Participation</td><td>Participation Cap</td><td>Conversion Ratio</td></tr><tr><td>Series Seed Preferred Stock</td><td>447066</td><td>0</td><td>0</td><td>447066</td><td>27.96</td><td>1</td><td>1</td><td>Non-Cumulative</td><td></td><td></td><td></td><td>1</td></tr><tr><td>Common</td><td>2451000</td><td>0</td><td>0</td><td>2451000</td><td>-</td><td>2</td><td>1</td><td></td><td></td><td></td><td></td><td>1</td></tr><tr><td>Total</td><td>2898066</td><td>0</td><td>0</td><td>2898066</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr><thead><tr><td colspan="13" style="text-align: center; font-weight: bold;">Revelar Biotherapeutics, Inc. Convertible Debt & Details as of December 31, 2021</td></tr></thead><tbody><tr><td>Principal Amount </td><td>Valuation Cap</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td>8500000</td><td>25000000</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr></tbody></table>'
-    },
-    unmapped: [
-      'PREPARED_BY',
-      'AICPA_NAME',
-      'COMMON_STOCK_VALUE',
-      'OPTION_PRICING_MODEL_TABLE',
-      'COMPANY_VALUE_&amp;_BREAKPOINTS',
-      'Managing_Director',
-      'SENIOR_DIRECTOR',
-      'Senior_Manager',
-      'BENCHMARK_TABLE'
-    ]
-  }
+    '<p><br/>Common stock valuation for<br/><br/><span class="variable" data-value="COMPANY_NAME">{{COMPANY_NAME}}</span><br/>Valuation Date: <span class="variable" data-value="VALUATION_DATE">{{VALUATION_DATE}}</span><br/><br/></p><table border="1" style="border-collapse:collapse;"><colgroup><col width="100" /><col width="100" /><col width="100" /></colgroup><tr height="66"><td colspan="3">​Revelar Biotherapeutics, Inc. Financials as of Year End </td></tr><tr height="42"><td>​2022</td><td>​2021</td><td>​</td></tr><tr height="42"><td>​Revenue</td><td>​0</td><td>​0</td></tr><tr height="42"><td>​EBITDA</td><td>​-3096843</td><td>​-19582000</td></tr><tr height="42"><td>​</td><td>​Actual </td><td>​Expected</td></tr><tr height="66"><td colspan="3">​Revelar Biotherapeutics, Inc. Balance Sheet as of Year End</td></tr><tr height="42"><td>​</td><td>​2021</td><td>​</td></tr><tr height="95"><td>​Cash &amp; Cash Equivalents</td><td>​3545941</td><td>​</td></tr><tr height="95"><td>​Interest Bearing Liabilities</td><td>​8500000</td><td>​</td></tr></table><p>Prepared by  on <span class="variable" data-value="VALUATION_DATE">{{VALUATION_DATE}}</span><br/><br/><span class="variable" data-value="CEO_NAME">{{CEO_NAME}}</span><br/><span class="variable" data-value="VALUATION_DATE">{{VALUATION_DATE}}</span><br/><br/>Chief Executive Officer<br/><span class="variable" data-value="COMPANY_NAME">{{COMPANY_NAME}}</span><br/><span class="variable" data-value="ADDRESS">{{ADDRESS}}</span><br/></p><!-- pagebreak --><p><br/>TABLE OF CONTENTS<br/><br/>Introduction / Letter of Engagement<br/>Standard of Value<br/>Scope of Engagement<br/>Scope of Analysis<br/>Valuation Summary<br/>Company Overview &amp; Company Update<br/>{{COMPANY_NAME}} Financials<br/>Capitalization<br/>Valuation Methodology Summary<br/>Report Certification<br/>Appraiser Bio &amp; Credentials<br/>Statement of Assumptions and Limiting Conditions<br/>Appendix (Economic Overview, Major Products, Operating Conditions, Valuation Methodologies, Allocation)<br/></p><!-- pagebreak --><p><br/>Introduction / Letter of Engagement<br/><span class="variable" data-value="CEO_NAME">{{CEO_NAME}}</span> March 9, 2022 <br/>Chief Executive Officer <br/></p><table border="1" style="border-collapse:collapse;"><colgroup>    <col width="100" /><col width="100" />    <col width="100" /></colgroup><tr height="66">    <td colspan="3">​Revelar Biotherapeutics, Inc. Financials as of Year End </td>  </tr></table><table border="1" style="border-collapse:collapse;">  <colgroup><col width="100" />    <col width="100" />    <col width="100" /></colgroup><tr height="42"><td>​</td><td>​2021</td><td>​2022</td></tr><tr height="42"><td>​Revenue</td><td>​0</td><td>​0</td></tr><tr height="42"><td>​EBITDA</td><td>​-3096843</td> <td>​-19582000</td></tr><tr height="42"> <td>​</td> <td>​Actual </td>    <td>​Expected</td>  </tr>  <tr height="66">    <td colspan="3">​RevelarBiotherapeutics, Inc. Balance Sheet as of Year End</td> </tr> <tr height="42">  <td>​</td>   <td>​2021</td>   <td>​</td> </tr><tr height="95">  <td>​Cash &amp; Cash Equivalents</td>  <td>​3545941</td>  <td>​</td></tr><tr height="95">  <td>​Interest Bearing Liabilities</td>  <td>​8500000</td>  <td>​</td></tr></table><p> <br/>9630 Eagle Ridge Drive Bethesda, MD 20817 <br/>This report details the valuation analysis used to derive the fair market value of the common equity of <span class="variable" data-value="COMPANY_NAME">{{COMPANY_NAME}}</span> (hereinafter referred to as “<span class="variable" data-value="COMPANY_NAME">{{COMPANY_NAME}}</span>” or the “Company”) on a per share basis (“Subject Interest”) as of <span class="variable" data-value="VALUATION_DATE">{{VALUATION_DATE}}</span>. It is understood that the valuation of the Subject Interest, as developed in this report, will be used for tax planning and financial reporting purposes in recognition of Internal Revenue Code Section 409A (“409A”) and FASB Accounting Standards Codification Topic 718 - Stock Compensation (“ASC 718”). As such, this report should not be used for any other purpose.<br/><br/>The analysis was prepared following the guidance of the American Institute of Certified Public Accountants (“AICPA”) Accounting and Valuation Guide: Valuation of Privately-Held-Company Equity Securities Issued as Compensation (the “AICPA Guide”).<br/><br/>STANDARD OF VALUE<br/>For income tax purposes, the appropriate standard of value is fair market value ("FMV"), which is defined as:<br/><br/>The price, expressed in terms of cash equivalents, at which such property would change hands between a hypothetical willing and able buyer and a hypothetical willing and able seller, acting at arms length in an open and unrestricted market, when neither is under compulsion to buy or to sell, and when both have reasonable knowledge of relevant facts.<br/>For financial reporting purposes, the appropriate standard of value is fair value ("FV"), which is defined as:<br/><br/>The amount at which an asset (or liability) could be bought (or incurred) or sold (or settled) in a current transaction between willing parties, that is, other than in a forced or liquidation sale.<br/>As noted in the FASB Board meeting of May <br/></p>',
+    variables: {
+      mapped: {
+        ADDRESS: '9630 Eagle Ridge Drive Bethesda, MD 20817',
+        CEO_NAME: 'Glenn Marina',
+        FINANCIALS:
+          '<table border="1" style="border-collapse: collapse; width: 100%;"><thead><tr><td colspan="3" style="text-align: center; font-weight: bold;">Revelar Biotherapeutics, Inc. Financials as of Year End </td></tr></thead><tbody><tr><td></td><td>2021</td><td>2022</td></tr><tr><td>Revenue</td><td>0</td><td>0</td></tr><tr><td>EBITDA</td><td>-3096843</td><td>-19582000</td></tr><tr><td></td><td>Actual </td><td>Expected</td></tr><thead><tr><td colspan="3" style="text-align: center; font-weight: bold;">Revelar Biotherapeutics, Inc. Balance Sheet as of Year End</td></tr></thead><tbody><tr><td></td><td>2021</td><td></td></tr><tr><td>Cash & Cash Equivalents</td><td>3545941</td><td></td></tr><tr><td>Interest Bearing Liabilities</td><td>8500000</td><td></td></tr></tbody></table>',
+        COMPANY_NAME: 'Revelar Biotherapeutics, Inc.',
+        VALUATION_DATE: '2021-12-31 ',
+        CAPITALIZATION_TABLE:
+          '<table border="1" style="border-collapse: collapse; width: 100%;"><thead><tr><td colspan="13" style="text-align: center; font-weight: bold;">Revelar Biotherapeutics, Inc. Capitalization Table (Share Classes) as of December 31, 2021</td></tr></thead><tbody><tr><td>Outstanding Shares</td><td>Shares Outstanding </td><td>Warrants</td><td>Options</td><td>Total</td><td>Issue Price</td><td>Liquidation Preference</td><td>Multiplier</td><td>Dividend Type</td><td>Dividend Rate</td><td>Participation</td><td>Participation Cap</td><td>Conversion Ratio</td></tr><tr><td>Series Seed Preferred Stock</td><td>447066</td><td>0</td><td>0</td><td>447066</td><td>27.96</td><td>1</td><td>1</td><td>Non-Cumulative</td><td></td><td></td><td></td><td>1</td></tr><tr><td>Common</td><td>2451000</td><td>0</td><td>0</td><td>2451000</td><td>-</td><td>2</td><td>1</td><td></td><td></td><td></td><td></td><td>1</td></tr><tr><td>Total</td><td>2898066</td><td>0</td><td>0</td><td>2898066</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr><thead><tr><td colspan="13" style="text-align: center; font-weight: bold;">Revelar Biotherapeutics, Inc. Convertible Debt & Details as of December 31, 2021</td></tr></thead><tbody><tr><td>Principal Amount </td><td>Valuation Cap</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td>8500000</td><td>25000000</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr></tbody></table>'
+      },
+      unmapped: [
+        'PREPARED_BY',
+        'AICPA_NAME',
+        'COMMON_STOCK_VALUE',
+        'OPTION_PRICING_MODEL_TABLE',
+        'COMPANY_VALUE_&amp;_BREAKPOINTS',
+        'Managing_Director',
+        'SENIOR_DIRECTOR',
+        'Senior_Manager',
+        'BENCHMARK_TABLE'
+      ]
+    }
 }
 
 // const text = `shantanu sutar`
@@ -528,324 +528,309 @@ const headingMap: Record<string, TitleLevel> = {
 }
 
 // 4) 核心遍历函数：加入 isVariable 标记
-function traverse(node: Node, isVariable = false) {
-  // —— 注释：检测 pagebreak ——
+function traverse(node: Node, isVariable = false, varKey?: string) {
+  // 1) handle <!-- pagebreak -->
   if (node.nodeType === COMMENT_NODE) {
     const comment = (node as Comment).data || ''
     if (/pagebreak/i.test(comment)) {
       elementList.push({
         value: '',
         type: ElementType.PAGE_BREAK,
-        ...(isVariable && { variable: true })
+        variable: isVariable,
+        variableName: isVariable && varKey ? `{{${varKey}}}` : undefined
       })
     }
     return
   }
 
-  switch (node.nodeType) {
-    // —— 纯文本——
-    case TEXT_NODE: {
-      const text = node.textContent || ''
-      for (const char of text) {
-        elementList.push({
-          value: char,
-          size: 16,
-          ...(isVariable && { variable: true })
-        })
-      }
-      break
+  // 2) text nodes
+  if (node.nodeType === TEXT_NODE) {
+    const text = node.textContent || ''
+    for (const char of text) {
+      elementList.push({
+        value: char,
+        size: 16,
+        variable: isVariable,
+        variableName: isVariable && varKey ? `{{${varKey}}}` : undefined
+      })
     }
-
-    // —— 元素节点——
-    case ELEMENT_NODE: {
-      const el = node as HTMLElement
-      const tag = el.tagName.toUpperCase()
-
-      // —— 1) variable span——
-      if (el.classList.contains('variable')) {
-        const key = el.getAttribute('data-value') || ''
-        const mappedVal = variablesMap[key] || ''
-
-        // parse fragment in a temp <div>
-        const container = document.createElement('div')
-        container.innerHTML = mappedVal
-
-        // 纯文本 or HTML？
-        if (!container.querySelector('*')) {
-          for (const char of mappedVal) {
-            elementList.push({
-              value: char,
-              size: 16,
-              color: '#0000FF',
-              groupIds: ['variable'],
-              variable: true
-            })
-          }
-        } else {
-          // 递归子节点，并且标记 isVariable = true
-          container.childNodes.forEach(child => traverse(child, true))
-        }
-        return
-      }
-
-      // —— 2) 标题 H1–H6——
-      if (headingMap[tag]) {
-        // Build a rich valueList of segments:
-        const segments: {
-          value: string
-          size: number
-          color?: string
-          groupIds?: string[]
-          variable?: boolean
-        }[] = []
-
-        el.childNodes.forEach(child => {
-          // Child is a <span class="variable" data-value="KEY">
-          if (
-            child.nodeType === ELEMENT_NODE &&
-            (child as HTMLElement).classList.contains('variable')
-          ) {
-            const key = (child as HTMLElement).getAttribute('data-value') || ''
-            const mapped = variablesMap[key] || ''
-
-            // push the entire mapped value as one segment, with highlight
-            segments.push({
-              value: mapped,
-              size: 18,
-              color: '#0000FF',
-              groupIds: ['variable'],
-              variable: true
-            })
-          } else {
-            // Plain text or other inline HTML
-            const txt = child.textContent || ''
-            if (txt.length) {
-              segments.push({
-                value: txt,
-                size: 18
-              })
-            }
-          }
-        })
-
-        elementList.push({
-          value: '',
-          type: ElementType.TITLE,
-          level: headingMap[tag],
-          valueList: segments
-        })
-        return
-      }
-
-      // —— 3) 段落 & DIV——
-      if (tag === 'P' || tag === 'DIV') {
-        el.childNodes.forEach(child => traverse(child, isVariable))
-        elementList.push({
-          value: '\n',
-          size: 16,
-          ...(isVariable && { variable: true })
-        })
-        return
-      }
-
-      // —— 4) 换行 BR——
-      if (tag === 'BR') {
-        elementList.push({
-          value: '\n',
-          size: 16,
-          ...(isVariable && { variable: true })
-        })
-        return
-      }
-
-      // —— 5) 分隔线 HR——
-      if (tag === 'HR') {
-        elementList.push({
-          value: '',
-          type: ElementType.SEPARATOR,
-          ...(isVariable && { variable: true })
-        })
-        return
-      }
-
-      // —— 6) 列表 UL / OL——
-      if (tag === 'UL' || tag === 'OL') {
-        const listType = tag === 'UL' ? ListType.UL : ListType.OL
-        el.querySelectorAll('li').forEach(li => {
-          elementList.push({
-            value: '',
-            type: ElementType.LIST,
-            listType,
-            valueList: [{ value: li.textContent || '', size: 16 }],
-            ...(isVariable && { variable: true })
-          })
-        })
-        return
-      }
-
-      // —— 7) 表格 TABLE——
-      if (tag === 'TABLE') {
-        // 收集所有行
-        const trEls = Array.from(el.querySelectorAll('tr'))
-
-        // 尝试读 <col> / <colgroup>
-        let cols = Array.from(el.querySelectorAll('col, colgroup col')).map(
-          c => ({
-            width: parseInt(c.getAttribute('width') || '100', 10)
-          })
-        )
-
-        // 没有声明列就自动用最长行宽度
-        if (!cols.length) {
-          const maxCells = trEls.reduce(
-            (m, tr) => Math.max(m, tr.children.length),
-            0
-          )
-          cols = Array(maxCells).fill({ width: 100 })
-        }
-
-        // 构造每行
-        const trs = trEls.map(tr => ({
-          height: parseInt(tr.getAttribute('height') || '0', 10),
-          tdList: Array.from(tr.children).map(td => {
-            const cell = td as HTMLElement
-            const textNodes = Array.from(cell.childNodes).flatMap(child =>
-              child.nodeType === TEXT_NODE
-                ? [{ value: child.textContent || '', size: 16 }]
-                : []
-            )
-            return {
-              colspan: parseInt(cell.getAttribute('colspan') || '1', 10),
-              rowspan: parseInt(cell.getAttribute('rowspan') || '1', 10),
-              value: textNodes
-            }
-          })
-        }))
-
-        elementList.push({
-          type: ElementType.TABLE,
-          value: '',
-          colgroup: cols,
-          trList: trs,
-          ...(isVariable && { variable: true })
-        })
-        return
-      }
-
-      // —— 8) 图片 IMG——
-      if (tag === 'IMG') {
-        elementList.push({
-          type: ElementType.IMAGE,
-          value: el.getAttribute('src') || '',
-          width: parseInt(el.getAttribute('width') || '0', 10),
-          height: parseInt(el.getAttribute('height') || '0', 10),
-          id: el.id || undefined,
-          ...(isVariable && { variable: true })
-        })
-        return
-      }
-
-      // —— 9) 超链接 A——
-      if (tag === 'A') {
-        elementList.push({
-          type: ElementType.HYPERLINK,
-          value: '',
-          valueList: [{ value: el.textContent || '', size: 16 }],
-          url: el.getAttribute('href') || '',
-          ...(isVariable && { variable: true })
-        })
-        return
-      }
-
-      // —— 10) 自定义控件 data-control-type——
-      if (el.hasAttribute('data-control-type')) {
-        const type = el.getAttribute('data-control-type') as ControlType
-        const control: any = {
-          conceptId: el.getAttribute('data-concept-id') || '',
-          type
-        }
-        if (type === ControlType.TEXT) {
-          control.placeholder = el.getAttribute('placeholder') || ''
-          control.minWidth = parseInt(
-            el.getAttribute('data-min-width') || '0',
-            10
-          )
-          control.underline = el.hasAttribute('data-underline')
-        } else if (type === ControlType.SELECT) {
-          control.placeholder = el.getAttribute('placeholder') || ''
-          control.valueSets = JSON.parse(el.getAttribute('data-values') || '[]')
-        } else if (type === ControlType.CHECKBOX) {
-          control.valueSets = JSON.parse(el.getAttribute('data-values') || '[]')
-        } else if (type === ControlType.DATE) {
-          control.placeholder = el.getAttribute('placeholder') || ''
-        }
-        elementList.push({
-          type: ElementType.CONTROL,
-          value: '',
-          control,
-          ...(isVariable && { variable: true })
-        })
-        return
-      }
-
-      // —— 11) 上标 / 下标——
-      if (tag === 'SUP') {
-        elementList.push({
-          value: el.textContent || '',
-          type: ElementType.SUPERSCRIPT,
-          ...(isVariable && { variable: true })
-        })
-        return
-      }
-      if (tag === 'SUB') {
-        elementList.push({
-          value: el.textContent || '',
-          type: ElementType.SUBSCRIPT,
-          ...(isVariable && { variable: true })
-        })
-        return
-      }
-
-      // —— 12) LaTeX——
-      if (el.classList.contains('latex')) {
-        elementList.push({
-          value: el.textContent || '',
-          type: ElementType.LATEX,
-          ...(isVariable && { variable: true })
-        })
-        return
-      }
-
-      // —— 13) 样式文本：B / I / U / S / STRONG / EM / DEL——
-      const styleProps: Record<string, any> = {}
-      if (['B', 'STRONG'].includes(tag)) styleProps.bold = true
-      if (['I', 'EM'].includes(tag)) styleProps.italic = true
-      if (tag === 'U') styleProps.underline = true
-      if (['S', 'DEL'].includes(tag)) styleProps.strikethrough = true
-      if (Object.keys(styleProps).length) {
-        const text = el.textContent || ''
-        for (const char of text) {
-          elementList.push({
-            value: char,
-            size: 16,
-            ...styleProps,
-            ...(isVariable && { variable: true })
-          })
-        }
-        return
-      }
-
-      // —— 14) 其它节点递归——
-      el.childNodes.forEach(child => traverse(child, isVariable))
-      break
-    }
+    return
   }
+
+  // 3) element nodes
+  const el = node as HTMLElement
+  const tag = el.tagName.toUpperCase()
+
+  // —— variable spans ——
+  if (el.classList.contains('variable')) {
+    const key = el.getAttribute('data-value') || ''
+    const mapped = variablesMap[key] || ''
+    const container = document.createElement('div')
+    container.innerHTML = mapped
+
+    if (!container.querySelector('*')) {
+      // pure text → push each char, with mapped text in value
+      for (const ch of mapped) {
+        elementList.push({
+          value: ch,
+          size: 16,
+          color: '#0000FF',
+          groupIds: ['variable'],
+          variable: true,
+          variableName: `{{${key}}}`
+        })
+      }
+    } else {
+      container.childNodes.forEach(n => traverse(n, true, key))
+    }
+    return
+  }
+
+  // —— headings H1–H6 ——
+  if (headingMap[tag]) {
+    const lvl = headingMap[tag]
+    const segments: IElement[] = []
+
+    el.childNodes.forEach(child => {
+      if (
+        child.nodeType === ELEMENT_NODE &&
+        (child as HTMLElement).classList.contains('variable')
+      ) {
+        const k = (child as HTMLElement).getAttribute('data-value') || ''
+        const mapped = variablesMap[k] || ''
+        segments.push({
+          value: mapped, // actual mapped text
+          size: 18,
+          color: '#0000FF',
+          groupIds: ['variable'],
+          variable: true,
+          variableName: `{{${k}}}` // keep it only here
+        })
+      } else {
+        const txt = child.textContent || ''
+        if (txt) {
+          segments.push({ value: txt, size: 18 })
+        }
+      }
+    })
+
+    elementList.push({
+      value: '',
+      type: ElementType.TITLE,
+      level: lvl,
+      valueList: segments,
+      variable: segments.some(s => s.variable)
+      // ← no variableName here anymore
+    })
+    return
+  }
+
+  // —— paragraphs & DIVs ——
+  if (tag === 'P' || tag === 'DIV') {
+    el.childNodes.forEach(n => traverse(n, isVariable, varKey))
+    elementList.push({
+      value: '\n',
+      size: 16,
+      variable: isVariable,
+      variableName: isVariable && varKey ? `{{${varKey}}}` : undefined
+    })
+    return
+  }
+
+  // —— BR ——
+  if (tag === 'BR') {
+    elementList.push({
+      value: '\n',
+      size: 16,
+      variable: isVariable,
+      variableName: isVariable && varKey ? `{{${varKey}}}` : undefined
+    })
+    return
+  }
+
+  // —— HR ——
+  if (tag === 'HR') {
+    elementList.push({
+      value: '',
+      type: ElementType.SEPARATOR,
+      variable: isVariable,
+      variableName: isVariable && varKey ? `{{${varKey}}}` : undefined
+    })
+    return
+  }
+
+  // —— UL/OL ——
+  if (tag === 'UL' || tag === 'OL') {
+    const listType = tag === 'UL' ? ListType.UL : ListType.OL
+    el.querySelectorAll('li').forEach(li => {
+      elementList.push({
+        value: '',
+        type: ElementType.LIST,
+        listType,
+        valueList: [{ value: li.textContent || '', size: 16 }],
+        variable: isVariable,
+        variableName: isVariable && varKey ? `{{${varKey}}}` : undefined
+      })
+    })
+    return
+  }
+
+  // —— TABLE ——
+  if (tag === 'TABLE') {
+    const trEls = Array.from(el.querySelectorAll('tr'))
+    let cols = Array.from(el.querySelectorAll('col, colgroup col')).map(c => ({
+      width: parseInt(c.getAttribute('width') || '100', 10)
+    }))
+    if (!cols.length) {
+      const maxCells = trEls.reduce(
+        (m, tr) => Math.max(m, tr.children.length),
+        0
+      )
+      cols = Array(maxCells).fill({ width: 100 })
+    }
+    const trs = trEls.map(tr => ({
+      height: parseInt(tr.getAttribute('height') || '0', 10),
+      tdList: Array.from(tr.children).map(td => {
+        const cell = td as HTMLElement
+        const textNodes = Array.from(cell.childNodes).flatMap(ch =>
+          ch.nodeType === TEXT_NODE
+            ? [{ value: ch.textContent || '', size: 16 }]
+            : []
+        )
+        return {
+          colspan: parseInt(cell.getAttribute('colspan') || '1', 10),
+          rowspan: parseInt(cell.getAttribute('rowspan') || '1', 10),
+          value: textNodes
+        }
+      })
+    }))
+    elementList.push({
+      type: ElementType.TABLE,
+      value: '',
+      colgroup: cols,
+      trList: trs,
+      variable: isVariable,
+      variableName: isVariable && varKey ? `{{${varKey}}}` : undefined
+    })
+    return
+  }
+
+  // —— IMG ——
+  if (tag === 'IMG') {
+    elementList.push({
+      type: ElementType.IMAGE,
+      value: el.getAttribute('src') || '',
+      width: parseInt(el.getAttribute('width') || '0', 10),
+      height: parseInt(el.getAttribute('height') || '0', 10),
+      id: el.id || undefined,
+      variable: isVariable,
+      variableName: isVariable && varKey ? `{{${varKey}}}` : undefined
+    })
+    return
+  }
+
+  // —— A link ——
+  if (tag === 'A') {
+    elementList.push({
+      type: ElementType.HYPERLINK,
+      value: '',
+      valueList: [{ value: el.textContent || '', size: 16 }],
+      url: el.getAttribute('href') || '',
+      variable: isVariable,
+      variableName: isVariable && varKey ? `{{${varKey}}}` : undefined
+    })
+    return
+  }
+
+  // —— CONTROL ——
+  if (el.hasAttribute('data-control-type')) {
+    const t = el.getAttribute('data-control-type') as ControlType
+    const ctrl: any = {
+      conceptId: el.getAttribute('data-concept-id') || '',
+      type: t
+    }
+    if (t === ControlType.TEXT) {
+      ctrl.placeholder = el.getAttribute('placeholder') || ''
+      ctrl.minWidth = parseInt(el.getAttribute('data-min-width') || '0', 10)
+      ctrl.underline = el.hasAttribute('data-underline')
+    } else if (t === ControlType.SELECT || t === ControlType.CHECKBOX) {
+      ctrl.placeholder = el.getAttribute('placeholder') || ''
+      ctrl.valueSets = JSON.parse(el.getAttribute('data-values') || '[]')
+    } else if (t === ControlType.DATE) {
+      ctrl.placeholder = el.getAttribute('placeholder') || ''
+    }
+    elementList.push({
+      type: ElementType.CONTROL,
+      value: '',
+      control: ctrl,
+      variable: isVariable,
+      variableName: isVariable && varKey ? `{{${varKey}}}` : undefined
+    })
+    return
+  }
+
+  // —— SUP / SUB ——
+  if (tag === 'SUP') {
+    elementList.push({
+      value: el.textContent || '',
+      type: ElementType.SUPERSCRIPT,
+      variable: isVariable,
+      variableName: isVariable && varKey ? `{{${varKey}}}` : undefined
+    })
+    return
+  }
+  if (tag === 'SUB') {
+    elementList.push({
+      value: el.textContent || '',
+      type: ElementType.SUBSCRIPT,
+      variable: isVariable,
+      variableName: isVariable && varKey ? `{{${varKey}}}` : undefined
+    })
+    return
+  }
+
+  // —— LaTeX ——
+  if (el.classList.contains('latex')) {
+    elementList.push({
+      value: el.textContent || '',
+      type: ElementType.LATEX,
+      variable: isVariable,
+      variableName: isVariable && varKey ? `{{${varKey}}}` : undefined
+    })
+    return
+  }
+
+  // —— styled text B / I / U / S ——
+  const styleProps: Record<string, any> = {}
+  if (['B', 'STRONG'].includes(tag)) styleProps.bold = true
+  if (['I', 'EM'].includes(tag)) styleProps.italic = true
+  if (tag === 'U') styleProps.underline = true
+  if (['S', 'DEL'].includes(tag)) styleProps.strikethrough = true
+
+  if (Object.keys(styleProps).length) {
+    const txt = el.textContent || ''
+    for (const ch of txt) {
+      elementList.push({
+        value: ch,
+        size: 16,
+        ...styleProps,
+        variable: isVariable,
+        variableName: isVariable && varKey ? `{{${varKey}}}` : undefined
+      })
+    }
+    return
+  }
+
+  // —— fallback recurse ——
+  el.childNodes.forEach(n => traverse(n, isVariable, varKey))
 }
 
-// 5) 从 <body> 顶层开始
-document.body.childNodes.forEach(node => traverse(node))
+// kick off traversal
+document.body.childNodes.forEach(n => traverse(n))
 
-// 最终输出
+// now elementList[] entries all carry:
+//   - variable: true when applicable
+//   - variableName: "{{KEY}}" for each run under that span
 console.log(elementList)
 
 export const data: IElement[] = elementList

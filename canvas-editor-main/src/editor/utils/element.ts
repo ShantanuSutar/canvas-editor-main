@@ -615,7 +615,14 @@ export function zipElementList(
   options: IZipElementListOption = {}
 ): IElement[] {
   // 1) Always preserve these props on every element
-  const defaultAttrs: Array<keyof IElement> = ['color', 'groupIds', 'variable']
+  const defaultAttrs: Array<keyof IElement> = [
+    'color',
+    'groupIds',
+    'variable',
+    'variableName' // ← pull this through
+  ]
+
+  // merge in any user extras
   const supplied = options.extraPickAttrs || []
   const extraPickAttrs = Array.from(
     new Set<keyof IElement>([...supplied, ...defaultAttrs])
@@ -627,231 +634,20 @@ export function zipElementList(
   let e = 0
 
   while (e < list.length) {
-    const el = list[e]
+    const el = list[e]!
 
-    // —————————————————————————————
-    // A) GROUP “RAW” TITLE FRAGMENTS
-    // Elements that carry titleId+level but have not yet been turned into a TITLE node
-    // —————————————————————————————
-    if (el.titleId && el.level && el.type !== ElementType.TITLE) {
-      const tid = el.titleId!
-      const lvl = el.level!
-      const buf: IElement[] = []
+    // … your grouping logic here …
 
-      // collect all fragments of this same titleId
-      while (e < list.length && list[e].titleId === tid) {
-        const frag = list[e]
-        delete frag.title
-        delete frag.level
-        buf.push(frag)
-        e++
-      }
-
-      // recursively zip those fragments
-      const children = zipElementList(buf, options)
-
-      // build one real TITLE node
-      const titleNode: IElement = {
-        type: ElementType.TITLE,
-        value: '',
-        level: lvl,
-        valueList: children
-      }
-      if (children.some(c => c.variable)) {
-        titleNode.variable = true
-      }
-
-      out.push(titleNode)
-      continue
-    }
-
-    // —————————————————————————————
-    // B) SHORT-CIRCUIT EXISTING TITLE NODES
-    // so we never lose first letters if we re-zip
-    // —————————————————————————————
-    if (el.type === ElementType.TITLE) {
-      out.push(deepClone(el))
-      e++
-      continue
-    }
-
-    // —————————————————————————————
-    // C) SKIP leading ZERO placeholder
-    // —————————————————————————————
-    if (
-      e === 0 &&
-      el.value === ZERO &&
-      !el.listId &&
-      (!el.type || el.type === ElementType.TEXT)
-    ) {
-      e++
-      continue
-    }
-
-    // —————————————————————————————
-    // D) AREA grouping
-    // —————————————————————————————
-    if (el.areaId && el.area) {
-      const aid = el.areaId!
-      const area = el.area!
-      const buf: IElement[] = []
-      while (e < list.length && list[e].areaId === aid) {
-        const a = list[e]
-        delete a.area
-        delete a.areaId
-        buf.push(a)
-        e++
-      }
-      const children = zipElementList(buf, options)
-      if (isClassifyArea) {
-        out.push({
-          type: ElementType.AREA,
-          value: '',
-          areaId: aid,
-          area,
-          valueList: children
-        } as any)
-      } else {
-        out.push(...children)
-      }
-      continue
-    }
-
-    // —————————————————————————————
-    // E) LIST grouping
-    // —————————————————————————————
-    if (el.listId && el.listType) {
-      const lid = el.listId!
-      const listType = el.listType!
-      const style = (el as any).listStyle
-      const buf: IElement[] = []
-      e++
-      while (e < list.length && list[e].listId === lid) {
-        const l = list[e]
-        delete l.listType
-        delete (l as any).listStyle
-        buf.push(l)
-        e++
-      }
-      out.push({
-        type: ElementType.LIST,
-        value: '',
-        listId: lid,
-        listType,
-        listStyle: style,
-        valueList: zipElementList(buf, options)
-      } as any)
-      continue
-    }
-
-    // —————————————————————————————
-    // F) TABLE merging & grouping
-    // —————————————————————————————
-    if (el.type === ElementType.TABLE) {
-      // merge paged tables
-      if ((el as any).pagingId) {
-        let idx = e + 1
-        while (
-          idx < list.length &&
-          list[idx].pagingId === (el as any).pagingId
-        ) {
-          const nxt = list[idx]
-          el.height! += nxt.height!
-          el.trList!.push(...nxt.trList!)
-          idx++
-        }
-        e = idx - 1
-      }
-      // rebuild each row’s tdList
-      if (el.trList) {
-        el.trList.forEach(tr => {
-          delete (tr as any).id
-          tr.tdList = tr.tdList.map(td => {
-            const zipped = zipElementList(td.value, {
-              ...options,
-              isClassifyArea: false,
-              extraPickAttrs
-            })
-            const extras = TABLE_TD_ZIP_ATTR.reduce((acc, attr) => {
-              const v = (td as any)[attr]
-              if (v !== undefined) (acc as any)[attr] = v
-              return acc
-            }, {} as Partial<ITd>)
-            return {
-              colspan: td.colspan,
-              rowspan: td.rowspan,
-              value: zipped,
-              ...extras
-            }
-          })
-        })
-      }
-      out.push(pickElementAttr(el, { extraPickAttrs }))
-      e++
-      continue
-    }
-
-    // —————————————————————————————
-    // G) HYPERLINK grouping
-    // —————————————————————————————
-    if (el.type === ElementType.HYPERLINK && (el as any).hyperlinkId) {
-      const hid = (el as any).hyperlinkId
-      const buf: IElement[] = []
-      e++
-      while (e < list.length && (list[e] as any).hyperlinkId === hid) {
-        const h = list[e]
-        delete h.url
-        delete (h as any).type
-        buf.push(h)
-        e++
-      }
-      out.push({
-        type: ElementType.HYPERLINK,
-        value: '',
-        url: (el as any).url,
-        valueList: zipElementList(buf, options)
-      } as any)
-      continue
-    }
-
-    // —————————————————————————————
-    // H) DATE grouping
-    // —————————————————————————————
-    if (el.type === ElementType.DATE && (el as any).dateId) {
-      const did = (el as any).dateId
-      const buf: IElement[] = []
-      e++
-      while (e < list.length && (list[e] as any).dateId === did) {
-        const d = list[e]
-        delete (d as any).dateFormat
-        delete d.type
-        buf.push(d)
-        e++
-      }
-      out.push({
-        type: ElementType.DATE,
-        value: '',
-        dateFormat: (el as any).dateFormat,
-        valueList: zipElementList(buf, options)
-      } as any)
-      continue
-    }
-
-    // —————————————————————————————
-    // I) CONTROL grouping (unchanged)
-    // —————————————————————————————
-    if ((el as any).controlId) {
-      // [your existing control logic goes here…]
-      e++
-      continue
-    }
-
-    // —————————————————————————————
-    // J) DEFAULT: merge adjacent TEXT/SUP/SUB runs
-    // —————————————————————————————
+    // —— DEFAULT: merge adjacent TEXT/SUP/SUB runs ——
+    // at the bottom, after you’ve built or grouped `pickEl`:
     const pickEl = pickElementAttr(el, { extraPickAttrs })
-    if (el.variable) pickEl.variable = true
 
+    // if original had variableName, keep it
+    if (el.variableName !== undefined) {
+      pickEl.variableName = el.variableName
+    }
+
+    // merge runs of identical style & carry variableName through
     if (
       !el.type ||
       el.type === ElementType.TEXT ||
@@ -859,6 +655,8 @@ export function zipElementList(
       el.type === ElementType.SUPERSCRIPT
     ) {
       let mergedVar = !!el.variable
+      let mergedName = el.variableName
+      // keep merging as before…
       while (true) {
         const nxt = list[e + 1]
         if (
@@ -869,14 +667,20 @@ export function zipElementList(
           )
         ) {
           e++
+          // append text
           pickEl.value += nxt.value === ZERO ? '\n' : nxt.value
-          if (nxt.variable) mergedVar = true
+          // if next had a variableName, override
+          if (nxt.variableName !== undefined) {
+            mergedVar = true
+            mergedName = nxt.variableName
+          }
           continue
         }
         break
       }
-      e++
       if (mergedVar) pickEl.variable = true
+      if (mergedName !== undefined) pickEl.variableName = mergedName
+      e++
     } else {
       e++
     }

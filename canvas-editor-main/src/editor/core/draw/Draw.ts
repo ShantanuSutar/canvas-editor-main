@@ -1132,6 +1132,8 @@ export class Draw {
   ): Required<IEditorData> {
     const { pageNo } = options
     let mainElementList = this.elementList
+
+    console.log('asdasd', mainElementList)
     if (
       Number.isInteger(pageNo) &&
       pageNo! >= 0 &&
@@ -1153,6 +1155,8 @@ export class Draw {
     const originData = this.getOriginValue(options)
     const { extraPickAttrs } = options
 
+    console.log('pass', originData)
+
     // Zip header, main, footer with our new zipElementList
     const data: IEditorData = {
       header: zipElementList(originData.header, { extraPickAttrs }),
@@ -1169,6 +1173,7 @@ export class Draw {
       options: deepClone(this.options)
     }
   }
+
   public setValue(payload: Partial<IEditorData>, options?: ISetValueOption) {
     const { header, main, footer } = deepClone(payload)
     if (!header && !main && !footer) return

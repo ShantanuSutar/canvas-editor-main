@@ -6,22 +6,18 @@ import {
   IElement
 } from './editor'
 
-// helpers for escaping
+// Escape helper
 function escapeHtml(str: string): string {
   return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
 }
 
 /**
- * Render a flat IElement[] back into an HTML string.
+ * Render a flat IElement[] back into HTML,
+ * replacing any .variable run with {{KEY}} (from groupIds[0]).
  */
 export function renderElementListToHtml(elements: IElement[]): string {
   let out = ''
   let i = 0
-
-  // Utility to consume N elements
-  // function next(): IElement | null {
-  //   return elements[++i] || null
-  // }
 
   while (i < elements.length) {
     const el = elements[i]
@@ -29,7 +25,6 @@ export function renderElementListToHtml(elements: IElement[]): string {
     switch (el.type) {
       // ==== TITLE ====
       case ElementType.TITLE: {
-        // pick the right <h#> from level
         const tag =
           {
             [TitleLevel.FIRST]: 'h1',
@@ -40,17 +35,17 @@ export function renderElementListToHtml(elements: IElement[]): string {
             [TitleLevel.SIXTH]: 'h6'
           }[el.level!] || 'h3'
 
-        // render each segment in valueList
+        // Render each segment in valueList
         const inner = (el.valueList || [])
           .map(seg => {
-            let txt = escapeHtml(seg.value)
-            // if variable flagged, wrap in span
-            if (seg.variable) {
-              txt = `<span class="variable" data-value="${
-                seg.groupIds?.[0] || ''
-              }">${txt}</span>`
+            if (seg.variable && seg.variableName) {
+              // Use the saved placeholder, e.g. "{{COMPANY_NAME}}"
+              const placeholder = seg.variableName
+              // Un-braced key for data-value attr:
+              const key = placeholder.replace(/^\{\{|\}\}$/g, '')
+              return `<span class="variable" data-value="${key}">${placeholder}</span>`
             }
-            return txt
+            return escapeHtml(seg.value)
           })
           .join('')
 
@@ -59,11 +54,13 @@ export function renderElementListToHtml(elements: IElement[]): string {
         break
       }
 
-      // ==== PARAGRAPHS (\n runs) ====
+      // ==== TEXT / SUP / SUB runs ====
       case undefined:
-      case ElementType.TEXT: {
-        // accumulate until a newline-only element or non-text
-        let txt = ''
+      case ElementType.TEXT:
+      case ElementType.SUPERSCRIPT:
+      case ElementType.SUBSCRIPT: {
+        let buf = ''
+
         while (
           i < elements.length &&
           (!elements[i].type ||
@@ -72,20 +69,26 @@ export function renderElementListToHtml(elements: IElement[]): string {
             elements[i].type === ElementType.SUBSCRIPT)
         ) {
           const t = elements[i]
-          let v = escapeHtml(t.value)
-          if (t.type === ElementType.SUPERSCRIPT) v = `<sup>${v}</sup>`
-          if (t.type === ElementType.SUBSCRIPT) v = `<sub>${v}</sub>`
-          if (t.variable) {
-            v = `<span class="variable" data-value="${
-              t.groupIds?.[0] || ''
-            }">${v}</span>`
+          let piece = ''
+
+          if (t.variable && t.variableName) {
+            const placeholder = t.variableName
+            const key = placeholder.replace(/^\{\{|\}\}$/g, '')
+            piece = `<span class="variable" data-value="${key}">${placeholder}</span>`
+          } else if (t.type === ElementType.SUPERSCRIPT) {
+            piece = `<sup>${escapeHtml(t.value)}</sup>`
+          } else if (t.type === ElementType.SUBSCRIPT) {
+            piece = `<sub>${escapeHtml(t.value)}</sub>`
+          } else {
+            piece = escapeHtml(t.value)
           }
-          txt += v
+
+          buf += piece
           i++
         }
-        // wrap in <p> if it contains non-newline text
-        if (txt.trim()) {
-          out += `<p>${txt.replace(/\n/g, '<br/>')}</p>\n`
+
+        if (buf.trim()) {
+          out += `<p>${buf.replace(/\n/g, '<br/>')}</p>\n`
         }
         break
       }
@@ -96,7 +99,7 @@ export function renderElementListToHtml(elements: IElement[]): string {
         i++
         break
 
-      // ==== SEPARATOR (HR) ====
+      // ==== HR / SEPARATOR ====
       case ElementType.SEPARATOR:
         out += `<hr/>\n`
         i++
@@ -118,7 +121,6 @@ export function renderElementListToHtml(elements: IElement[]): string {
       // ==== TABLE ====
       case ElementType.TABLE: {
         out += `<table border="1" style="border-collapse:collapse;">\n`
-        // colgroup if any
         if (el.colgroup) {
           out += `  <colgroup>\n`
           el.colgroup.forEach(c => (out += `    <col width="${c.width}" />\n`))
@@ -130,8 +132,8 @@ export function renderElementListToHtml(elements: IElement[]): string {
           tr.tdList.forEach(td => {
             const cs = td.colspan > 1 ? ` colspan="${td.colspan}"` : ''
             const rs = td.rowspan > 1 ? ` rowspan="${td.rowspan}"` : ''
-            const cellHtml = td.value.map(c => escapeHtml(c.value)).join('')
-            out += `    <td${cs}${rs}>${cellHtml}</td>\n`
+            const cell = td.value.map(c => escapeHtml(c.value)).join('')
+            out += `    <td${cs}${rs}>${cell}</td>\n`
           })
           out += `  </tr>\n`
         })
@@ -152,29 +154,30 @@ export function renderElementListToHtml(elements: IElement[]): string {
 
       // ==== IMAGE ====
       case ElementType.IMAGE:
-        out += `<img src="${el.value}"${el.id ? ` id="${el.id}"` : ''}`
-        if (el.width) out += ` width="${el.width}"`
-        if (el.height) out += ` height="${el.height}"`
-        out += `/>\n`
+        out +=
+          `<img src="${el.value}"` +
+          `${el.id ? ` id="${el.id}"` : ''}` +
+          `${el.width ? ` width="${el.width}"` : ''}` +
+          `${el.height ? ` height="${el.height}"` : ''}/> \n`
         i++
         break
 
-      // ==== CONTROL (TEXT, SELECT, CHECKBOX, DATE) ====
+      // ==== CONTROL ====
       case ElementType.CONTROL: {
-        const ctrl = el.control!
-        const attrs = [`data-control-type="${ctrl.type}"`]
-        if (ctrl.conceptId) attrs.push(`data-concept-id="${ctrl.conceptId}"`)
-        if (ctrl.placeholder) attrs.push(`placeholder="${ctrl.placeholder}"`)
-        if (ctrl.type === ControlType.TEXT && ctrl.minWidth)
-          attrs.push(`data-min-width="${ctrl.minWidth}"`)
-        if (ctrl.type === ControlType.TEXT && ctrl.underline)
+        const c = el.control!
+        const attrs = [`data-control-type="${c.type}"`]
+        if (c.conceptId) attrs.push(`data-concept-id="${c.conceptId}"`)
+        if (c.placeholder) attrs.push(`placeholder="${c.placeholder}"`)
+        if (c.type === ControlType.TEXT && c.minWidth)
+          attrs.push(`data-min-width="${c.minWidth}"`)
+        if (c.type === ControlType.TEXT && c.underline)
           attrs.push(`data-underline`)
         if (
-          ctrl.type === ControlType.SELECT ||
-          ctrl.type === ControlType.CHECKBOX
+          (c.type === ControlType.SELECT || c.type === ControlType.CHECKBOX) &&
+          c.valueSets
         )
-          attrs.push(`data-values='${JSON.stringify(ctrl.valueSets)}'`)
-        // date uses format
+          attrs.push(`data-values='${JSON.stringify(c.valueSets)}'`)
+
         out += `<span ${attrs.join(' ')}></span>\n`
         i++
         break
@@ -192,8 +195,8 @@ export function renderElementListToHtml(elements: IElement[]): string {
         i++
         break
 
+      // ==== FALLBACK ====
       default:
-        // unknown—print raw
         out += escapeHtml(el.value)
         i++
         break

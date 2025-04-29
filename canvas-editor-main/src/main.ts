@@ -63,6 +63,7 @@ window.onload = function () {
     },
     options
   )
+
   console.log('实例: ', data)
   // cypress使用
   Reflect.set(window, 'editor', instance)
@@ -1797,6 +1798,8 @@ window.onload = function () {
   }
 
   const handleContentChange = async function () {
+    console.log('clicked')
+
     // 字数
     const wordCount = await instance.command.getWordCount()
     document.querySelector<HTMLSpanElement>('.word-count')!.innerText = `${
