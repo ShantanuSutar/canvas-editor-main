@@ -489,6 +489,14 @@ export class TableParticle {
         }
       }
     }
+    
+    // Ensure table width respects available width by adjusting columns if needed
+    const tableWidth = this.getTableWidth(element);
+    const availableWidth = this.draw.getOriginalInnerWidth();
+    if (tableWidth > availableWidth) {
+      const tableOperate = this.draw.getTableOperate();
+      tableOperate.adjustColWidth(element);
+    }
   }
 
   public drawRange(
@@ -552,6 +560,16 @@ export class TableParticle {
     startX: number,
     startY: number
   ) {
+    // Ensure table is properly sized before rendering
+    const tableWidth = this.getTableWidth(element);
+    const availableWidth = this.draw.getOriginalInnerWidth();
+    
+    // If table is wider than available space, ask TableOperate to adjust it
+    if (tableWidth > availableWidth) {
+      const tableOperate = this.draw.getTableOperate();
+      tableOperate.adjustColWidth(element);
+    }
+    
     this._drawBackgroundColor(ctx, element, startX, startY)
     this._drawBorder(ctx, element, startX, startY)
   }

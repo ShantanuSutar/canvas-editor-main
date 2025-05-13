@@ -144,7 +144,7 @@ export function renderElementListToHtml(elements: IElement[]): string {
         el.colgroup.forEach(c => (out += `    <col width=\"${c.width}\" />\n`))
         out += `  </colgroup>\n`
       }
-      ;(el.trList || []).forEach(tr => {
+      (el.trList || []).forEach(tr => {
         out += `  <tr${tr.height ? ` height=\"${tr.height}\"` : ''}>\n`
         tr.tdList.forEach(td => {
           const cs = td.colspan > 1 ? ` colspan=\"${td.colspan}\"` : ''

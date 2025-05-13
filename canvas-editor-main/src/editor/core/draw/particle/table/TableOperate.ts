@@ -51,12 +51,25 @@ export class TableOperate {
     const innerWidth = this.draw.getContextInnerWidth() - offsetX
     // colgroup
     const colgroup: IColgroup[] = []
-    const colWidth = innerWidth / col
+    
+    // Calculate column width to fit within available width
+    const colWidth = Math.min(
+      this.options.table.defaultColMinWidth,
+      innerWidth / col
+    )
+    
+    // If all columns at min width would exceed canvas width, adjust column width
+    const totalWidth = this.options.table.defaultColMinWidth * col
+    const adjustedColWidth = totalWidth > innerWidth 
+      ? innerWidth / col 
+      : Math.max(this.options.table.defaultColMinWidth, innerWidth / col)
+    
     for (let c = 0; c < col; c++) {
       colgroup.push({
-        width: colWidth
+        width: adjustedColWidth
       })
     }
+    
     // trlist
     const trList: ITr[] = []
     for (let r = 0; r < row; r++) {
@@ -231,18 +244,60 @@ export class TableOperate {
     const colgroup = element.colgroup!
     const colgroupWidth = colgroup.reduce((pre, cur) => pre + cur.width, 0)
     const width = this.draw.getOriginalInnerWidth()
+    
+    // If table is wider than available width, adjust it
     if (colgroupWidth > width) {
-      // 过滤大于最小宽度的列（可能减少宽度的列）
+      // Filter columns wider than minimum width (columns that can be reduced)
       const greaterMinWidthCol = colgroup.filter(
         col => col.width > defaultColMinWidth
       )
-      // 均分多余宽度
-      const adjustWidth = (colgroupWidth - width) / greaterMinWidthCol.length
+      
+      if (greaterMinWidthCol.length > 0) {
+        // Distribute excess width proportionally among columns that can be reduced
+        const adjustWidth = (colgroupWidth - width) / greaterMinWidthCol.length
+        for (let g = 0; g < colgroup.length; g++) {
+          const group = colgroup[g]
+          // Only reduce columns with width greater than minimum width
+          if (group.width - adjustWidth >= defaultColMinWidth) {
+            group.width -= adjustWidth
+          }
+        }
+      } else {
+        // If all columns are at minimum width, we need to proportionally scale all columns
+        // to fit within the available width
+        const ratio = width / colgroupWidth
+        for (let g = 0; g < colgroup.length; g++) {
+          colgroup[g].width = Math.max(defaultColMinWidth, colgroup[g].width * ratio)
+        }
+        
+        // Final adjustment to ensure we exactly match available width
+        const newTotalWidth = colgroup.reduce((pre, cur) => pre + cur.width, 0)
+        if (Math.abs(newTotalWidth - width) > 0.1) {
+          // Find widest column that can be adjusted
+          const widestColIndex = colgroup.reduce(
+            (maxIndex, col, index, array) => 
+              col.width > array[maxIndex].width ? index : maxIndex, 
+            0
+          )
+          // Adjust the widest column to make total width match exactly
+          colgroup[widestColIndex].width += (width - newTotalWidth)
+        }
+      }
+      
+      // Double check that we haven't created any columns less than minimum width
+      let finalTotalWidth = 0;
       for (let g = 0; g < colgroup.length; g++) {
-        const group = colgroup[g]
-        // 小于最小宽度的列不处理
-        if (group.width - adjustWidth >= defaultColMinWidth) {
-          group.width -= adjustWidth
+        if (colgroup[g].width < defaultColMinWidth) {
+          colgroup[g].width = defaultColMinWidth;
+        }
+        finalTotalWidth += colgroup[g].width;
+      }
+      
+      // If we're still over width, do one final proportional adjustment
+      if (finalTotalWidth > width) {
+        const finalRatio = width / finalTotalWidth;
+        for (let g = 0; g < colgroup.length; g++) {
+          colgroup[g].width = Math.max(defaultColMinWidth, colgroup[g].width * finalRatio);
         }
       }
     }

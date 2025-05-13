@@ -361,48 +361,46 @@ export class TableTool {
 
   private _mousedown(payload: IAnchorMouseDown) {
     const { evt, index, order, element } = payload
-    this.canvas = this.draw.getPage()
-    const { scale } = this.options
-    const width = this.draw.getWidth()
-    const height = this.draw.getHeight()
-    const pageGap = this.draw.getPageGap()
-    const prePageHeight = this.draw.getPageNo() * (height + pageGap)
-    this.mousedownX = evt.x
-    this.mousedownY = evt.y
-    const target = evt.target as HTMLDivElement
-    const canvasRect = this.canvas.getBoundingClientRect()
-    // 改变光标
-    const cursor = window.getComputedStyle(target).cursor
-    document.body.style.cursor = cursor
-    this.canvas.style.cursor = cursor
+    const { x, y } = evt
+    // 鼠标位置
+    this.mousedownX = x
+    this.mousedownY = y
+    // 基础信息
+    const pageNo = this.draw.getPageNo();
+    const scale = this.options.scale;
+    const page = this.draw.getPage(pageNo)
     // 拖拽线
-    let startX = 0
-    let startY = 0
+    const parentRect = page.getBoundingClientRect()
     const anchorLine = document.createElement('div')
-    anchorLine.classList.add(`${EDITOR_PREFIX}-table-anchor__line`)
-    if (order === TableOrder.ROW) {
-      anchorLine.classList.add(`${EDITOR_PREFIX}-table-anchor__line__row`)
-      anchorLine.style.width = `${width}px`
-      startX = 0
-      startY = prePageHeight + this.mousedownY - canvasRect.top
+    const isCol = order === TableOrder.COL
+    anchorLine.classList.add(`${EDITOR_PREFIX}-table-tool__anchor-line`)
+    if (isCol) {
+      anchorLine.classList.add(`${EDITOR_PREFIX}-table-tool__anchor-line__col`)
     } else {
-      anchorLine.classList.add(`${EDITOR_PREFIX}-table-anchor__line__col`)
-      anchorLine.style.height = `${height}px`
-      startX = this.mousedownX - canvasRect.left
-      startY = prePageHeight
+      anchorLine.classList.add(`${EDITOR_PREFIX}-table-tool__anchor-line__row`)
     }
-    anchorLine.style.left = `${startX}px`
-    anchorLine.style.top = `${startY}px`
+    anchorLine.style.top = `${y - parentRect.top}px`
+    anchorLine.style.left = `${x - parentRect.left}px`
     this.container.append(anchorLine)
     this.anchorLine = anchorLine
-    // 追加全局事件
+    // 原始鼠标样式
+    const originCursor = document.body.style.cursor
+    this.canvas.style.cursor = 'none'
+    document.body.style.cursor = isCol ? 'col-resize' : 'row-resize'
+    // 绑定移动事件
     let dx = 0
     let dy = 0
     const mousemoveFn = (evt: MouseEvent) => {
-      const movePosition = this._mousemove(evt, order, startX, startY)
-      if (movePosition) {
-        dx = movePosition.dx
-        dy = movePosition.dy
+      const { x, y } = evt
+      const anchorLine = this.anchorLine
+      if (!anchorLine) return
+      // x轴方向拖拽
+      if (isCol) {
+        dx = Math.ceil((x - this.mousedownX) / scale)
+        anchorLine.style.left = `${x - parentRect.left}px`
+      } else {
+        dy = Math.ceil((y - this.mousedownY) / scale)
+        anchorLine.style.top = `${y - parentRect.top}px`
       }
     }
     document.addEventListener('mousemove', mousemoveFn)
@@ -428,7 +426,7 @@ export class TableTool {
           const { colgroup } = element
           if (colgroup && dx) {
             // 宽度分配
-            const innerWidth = this.draw.getInnerWidth()
+            const innerWidth = this.draw.getOriginalInnerWidth()
             const curColWidth = colgroup[index].width
             // 最小移动距离计算-如果向左移动：使单元格小于最小宽度，则减少移动量
             if (dx < 0 && curColWidth + dx < this.MIN_TD_WIDTH) {
@@ -443,35 +441,30 @@ export class TableTool {
             ) {
               dx = nextColWidth - this.MIN_TD_WIDTH
             }
-            const moveColWidth = curColWidth + dx
-            // 开始移动，只有表格的最后一列线才会改变表格的宽度，其他场景不用计算表格超出
-            if (index === colgroup.length - 1) {
-              let moveTableWidth = 0
-              for (let c = 0; c < colgroup.length; c++) {
-                const group = colgroup[c]
-                // 下一列减去偏移量
-                if (c === index + 1) {
-                  moveTableWidth -= dx
-                }
-                // 当前列加上偏移量
-                if (c === index) {
-                  moveTableWidth += moveColWidth
-                }
-                if (c !== index) {
-                  moveTableWidth += group.width
-                }
-              }
-              if (moveTableWidth > innerWidth) {
-                const tableWidth = element.width!
-                dx = innerWidth - tableWidth
-              }
+            
+            // Check if resize would make the table exceed the available width
+            const isLastColumn = index === colgroup.length - 1;
+            const currentTableWidth = colgroup.reduce((pre, cur) => pre + cur.width, 0);
+            const newTableWidth = currentTableWidth + (isLastColumn ? dx : 0);
+            
+            if (isLastColumn && newTableWidth > innerWidth) {
+              // Limit the resize to prevent exceeding available width
+              dx = innerWidth - currentTableWidth;
             }
+            
             if (dx) {
               // 当前列增加，后列减少
               if (colgroup.length - 1 !== index) {
-                colgroup[index + 1].width -= dx / scale
+                colgroup[index + 1].width -= dx
               }
-              colgroup[index].width += dx / scale
+              colgroup[index].width += dx
+              
+              // If this resize would cause the table to exceed available width, adjust
+              const updatedTableWidth = colgroup.reduce((pre, cur) => pre + cur.width, 0);
+              if (updatedTableWidth > innerWidth) {
+                this.draw.getTableOperate().adjustColWidth(element);
+              }
+              
               isChangeSize = true
             }
           }
@@ -490,23 +483,5 @@ export class TableTool {
       }
     )
     evt.preventDefault()
-  }
-
-  private _mousemove(
-    evt: MouseEvent,
-    tableOrder: TableOrder,
-    startX: number,
-    startY: number
-  ): { dx: number; dy: number } | null {
-    if (!this.anchorLine) return null
-    const dx = evt.x - this.mousedownX
-    const dy = evt.y - this.mousedownY
-    if (tableOrder === TableOrder.ROW) {
-      this.anchorLine.style.top = `${startY + dy}px`
-    } else {
-      this.anchorLine.style.left = `${startX + dx}px`
-    }
-    evt.preventDefault()
-    return { dx, dy }
   }
 }

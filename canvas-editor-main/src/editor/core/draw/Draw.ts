@@ -1509,6 +1509,10 @@ export class Draw {
         }
         // 需要重新计算表格内值
         this.tableParticle.computeRowColInfo(element)
+        
+        // Ensure table width is constrained to canvas width with margins
+        this.tableOperate.adjustColWidth(element)
+        
         // 计算出表格高度
         const tableHeight = this.tableParticle.getTableHeight(element)
         const tableWidth = this.tableParticle.getTableWidth(element)
