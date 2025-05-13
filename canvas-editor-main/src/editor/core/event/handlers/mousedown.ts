@@ -61,6 +61,14 @@ export function hitRadio(element: IElement, draw: Draw) {
   }
 }
 
+// Function to log element value on click
+export function logElementValue(element: IElement) {
+  if (element) {
+    console.log('Clicked element value:', element.value)
+    console.log('Clicked element:', element)
+  }
+}
+
 export function mousedown(evt: MouseEvent, host: CanvasEvent) {
   const draw = host.getDraw()
   const isReadonly = draw.isReadonly()
@@ -122,6 +130,12 @@ export function mousedown(evt: MouseEvent, host: CanvasEvent) {
   const positionList = position.getPositionList()
   const curIndex = isTable ? tdValueIndex! : index
   const curElement = elementList[curIndex]
+  
+  // Log the clicked element value
+  if (curElement) {
+    logElementValue(curElement)
+  }
+  
   // 绘制
   const isDirectHitImage = !!(isDirectHit && isImage)
   const isDirectHitCheckbox = !!(isDirectHit && isCheckbox)

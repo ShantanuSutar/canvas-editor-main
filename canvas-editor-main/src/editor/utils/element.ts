@@ -20,7 +20,6 @@ import {
   EDITOR_ROW_ATTR,
   INLINE_NODE_NAME,
   TABLE_CONTEXT_ATTR,
-  TABLE_TD_ZIP_ATTR,
   TEXTLIKE_ELEMENT_TYPE,
   TITLE_CONTEXT_ATTR
 } from '../dataset/constant/Element'
@@ -45,7 +44,7 @@ import { RowFlex } from '../dataset/enum/Row'
 import { TableBorder, TdBorder } from '../dataset/enum/table/Table'
 import { DeepRequired } from '../interface/Common'
 import { IEditorOption } from '../interface/Editor'
-import { IElement, IListElement } from '../interface/Element'
+import { IElement } from '../interface/Element'
 import { IRowElement } from '../interface/Row'
 import { ITd } from '../interface/table/Td'
 import { ITr } from '../interface/table/Tr'

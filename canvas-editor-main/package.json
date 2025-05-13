@@ -15,7 +15,7 @@
     "LICENSE",
     "package.json"
   ],
-  "typings": "./dist/src/editor/index.d.ts",
+  "typings": "./dist/types/index.d.ts",
   "main": "./dist/canvas-editor.umd.js",
   "module": "./dist/canvas-editor.es.js",
   "homepage": "https://github.com/Hufe921/canvas-editor",
@@ -35,13 +35,15 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "lib": "npm run lint && tsc && vite build --mode lib",
-    "build": "npm run lint && tsc && vite build --mode app",
-    "serve": "vite preview",
+    "build:app": "npm run lint && tsc && vite build --mode app",
+    "demo": "npm run build:app && vite preview --open --mode app",
+    "build:lib": "npm run lint && tsc && vite build --mode lib",
+    "build": "npm run build:lib",
+    "serve": "vite preview --mode app",
     "lint": "eslint .",
+    "type:check": "tsc --noEmit",
     "cypress:open": "cypress open",
     "cypress:run": "cypress run",
-    "type:check": "tsc --noEmit",
     "docs:dev": "vitepress dev docs",
     "docs:build": "vitepress build docs",
     "docs:preview": "vitepress preview docs",
@@ -60,10 +62,9 @@
     "eslint": "7.32.0",
     "simple-git-hooks": "^2.8.1",
     "typescript": "4.9.5",
-    "vite": "^2.4.2",
+    "vite": "^4.0.0",
     "vite-plugin-css-injected-by-js": "^2.1.1",
-    "vitepress": "1.0.0-beta.6",
-    "vue": "^3.2.45"
+    "vite-plugin-dts": "^4.5.3"
   },
   "dependencies": {
     "jsdom": "^26.1.0",

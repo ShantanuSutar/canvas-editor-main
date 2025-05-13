@@ -21,6 +21,15 @@ import drag from './handlers/drag'
 import { isIOS } from '../../utils/ua'
 import { ICopyOption } from '../../interface/Event'
 
+// Debounce utility directly in this file
+function debounce<T extends (...args: any[]) => any>(fn: T, wait: number) {
+  let timer: number | null = null
+  return (...args: Parameters<T>) => {
+    if (timer !== null) clearTimeout(timer)
+    timer = window.setTimeout(() => fn(...args), wait)
+  }
+}
+
 export interface ICompositionInfo {
   elementList: IElement[]
   startIndex: number
@@ -48,6 +57,9 @@ export class CanvasEvent {
   private range: RangeManager
   private position: Position
 
+  // debounced save
+  private debouncedSave: (val: any) => void
+
   constructor(draw: Draw) {
     this.draw = draw
     this.pageContainer = draw.getPageContainer()
@@ -65,6 +77,16 @@ export class CanvasEvent {
     this.cachePositionList = null
     this.cachePositionContext = null
     this.mouseDownStartPosition = null
+
+    // setup debounced save: fires 1s after last trigger
+    const listener = this.draw.getListener()
+    this.debouncedSave = debounce((val: any) => {
+      listener.saved?.(val)
+      const eventBus = this.draw.getEventBus()
+      if (eventBus.isSubscribe('saved')) {
+        eventBus.emit('saved', val)
+      }
+    }, 1000)
   }
 
   public getDraw(): Draw {
@@ -162,6 +184,13 @@ export class CanvasEvent {
 
   public keydown(evt: KeyboardEvent) {
     keydown(evt, this)
+  }
+
+  public handleSaveShortcut(evt: KeyboardEvent) {
+    evt.preventDefault()
+    if (this.draw.isReadonly()) return
+    // debounce actual save
+    this.debouncedSave(this.draw.getValue())
   }
 
   public dblclick(evt: MouseEvent) {

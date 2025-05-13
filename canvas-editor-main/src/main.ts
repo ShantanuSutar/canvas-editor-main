@@ -31,7 +31,7 @@ import { renderElementListToHtml } from './renderHtml'
 window.onload = function () {
   const isApple =
     typeof navigator !== 'undefined' && /Mac OS X/.test(navigator.userAgent)
-
+  console.log(data)
   // 1. 初始化编辑器
   const container = document.querySelector<HTMLDivElement>('.editor')!
   const instance = new Editor(
@@ -1536,6 +1536,7 @@ window.onload = function () {
           commentItem.classList.add('comment-item')
           commentItem.setAttribute('data-id', comment.id)
           commentItem.onclick = () => {
+            console.log(groupIds)
             instance.command.executeLocationGroup(comment.id)
           }
           commentDom.append(commentItem)
@@ -1823,6 +1824,7 @@ window.onload = function () {
     console.log('elementList: ', payload)
     console.log(instance.command.getValue())
     const html = renderElementListToHtml(instance.command.getValue().data.main)
+    // console.log(instance.command.getCatalog())
     console.log(html)
   }
 

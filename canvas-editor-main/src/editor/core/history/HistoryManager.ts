@@ -5,6 +5,10 @@ export class HistoryManager {
   private redoStack: Array<Function> = []
   private maxRecordCount: number
 
+  // Throttle fields for executeThrottled
+  private lastExecuteTime = 0
+  private readonly throttleInterval: number = 500 // milliseconds
+
   constructor(draw: Draw) {
     // 忽略第一次历史记录
     this.maxRecordCount = draw.getOptions().historyMaxRecordCount + 1
@@ -28,6 +32,9 @@ export class HistoryManager {
     }
   }
 
+  /**
+   * Execute and record a history function immediately
+   */
   public execute(fn: Function) {
     this.undoStack.push(fn)
     if (this.redoStack.length) {
@@ -36,6 +43,25 @@ export class HistoryManager {
     while (this.undoStack.length > this.maxRecordCount) {
       this.undoStack.shift()
     }
+  }
+
+  /**
+   * Execute and record a history function, but throttle calls to at most once per throttleInterval
+   */
+  public executeThrottled(fn: Function) {
+    const now = performance.now()
+    if (now - this.lastExecuteTime > this.throttleInterval) {
+      this.execute(fn)
+      this.lastExecuteTime = now
+    }
+  }
+
+  /**
+   * Alias for executeThrottled for compatibility
+   * Call this with a function that captures the snapshot to push.
+   */
+  public pushCurrentStateThrottled(fn: Function) {
+    this.executeThrottled(fn)
   }
 
   public isCanUndo(): boolean {

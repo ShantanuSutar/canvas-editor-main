@@ -10,10 +10,69 @@ import { right } from './right'
 import { tab } from './tab'
 import { updown } from './updown'
 
+// —— BATCHED INSERT HELPERS ——
+let isFlushScheduled = false
+let pendingKeys: Array<{ evt: KeyboardEvent; host: CanvasEvent }> = []
+
+/**
+ * Flush all pending character insertions in the next animation frame
+ */
+function flushPending() {
+  if (pendingKeys.length === 0) return
+  // insert all buffered keystrokes
+  const keysToInsert = pendingKeys.slice()
+  pendingKeys = []
+  isFlushScheduled = false
+  for (const { evt, host } of keysToInsert) {
+    insertCharacter(evt, host)
+  }
+}
+
+/**
+ * Detect whether this event should insert a single character
+ */
+function shouldInsertCharacter(evt: KeyboardEvent) {
+  return (
+    evt.key.length === 1 && // single printable character
+    !evt.ctrlKey &&
+    !evt.metaKey &&
+    !evt.altKey
+  )
+}
+
+/**
+ * Inserts `evt.key` into the document/model and records history throttled
+ */
+function insertCharacter(evt: KeyboardEvent, host: CanvasEvent) {
+  const draw = host.getDraw()
+
+  // TODO: replace with your actual insertion logic:
+  // e.g. host.input(evt.key) or draw.getTextManager().insertAtCursor(evt.key)
+  host.input(evt.key)
+
+  // record history with throttle
+  draw.getHistoryManager().pushCurrentStateThrottled(() => {
+    // snapshot function: capture current state
+    // e.g. draw.getValue() or deep clone of document model
+  })
+}
+
 export function keydown(evt: KeyboardEvent, host: CanvasEvent) {
   if (host.isComposing) return
   const draw = host.getDraw()
-  // 键盘事件逻辑分发
+
+  // —— BATCHED CHARACTER INSERTION ——
+  if (shouldInsertCharacter(evt)) {
+    evt.preventDefault()
+    pendingKeys.push({ evt, host })
+    if (!isFlushScheduled) {
+      isFlushScheduled = true
+      requestAnimationFrame(flushPending)
+    }
+    return
+  }
+
+  // —— OTHER KEY HANDLERS ——
   if (evt.key === KeyMap.Backspace) {
     backspace(evt, host)
   } else if (evt.key === KeyMap.Delete) {
@@ -44,20 +103,9 @@ export function keydown(evt: KeyboardEvent, host: CanvasEvent) {
     host.selectAll()
     evt.preventDefault()
   } else if (isMod(evt) && evt.key.toLocaleLowerCase() === KeyMap.S) {
-    if (draw.isReadonly()) return
-    const listener = draw.getListener()
-    if (listener.saved) {
-      listener.saved(draw.getValue())
-    }
-    const eventBus = draw.getEventBus()
-    if (eventBus.isSubscribe('saved')) {
-      eventBus.emit('saved', draw.getValue())
-    }
-    evt.preventDefault()
+    host.handleSaveShortcut(evt)
   } else if (evt.key === KeyMap.ESC) {
-    // 退出格式刷
     host.clearPainterStyle()
-    // 退出页眉页脚编辑
     const zoneManager = draw.getZone()
     if (!zoneManager.isMainActive()) {
       zoneManager.setZone(EditorZone.MAIN)
