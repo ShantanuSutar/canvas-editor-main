@@ -13,6 +13,14 @@ import { CanvasEvent } from '../CanvasEvent'
 import { IElement } from '../../../interface/Element'
 import { Draw } from '../../draw/Draw'
 
+// Export logElementValue for external access
+export function logElementValue(element: IElement) {
+  if (element) {
+    console.log('Clicked element value:', element.value)
+    console.log('Clicked element:', element)
+  }
+}
+
 export function setRangeCache(host: CanvasEvent) {
   const draw = host.getDraw()
   const position = draw.getPosition()
@@ -58,14 +66,6 @@ export function hitRadio(element: IElement, draw: Draw) {
     if (activeControl instanceof RadioControl) {
       activeControl.setSelect(codes)
     }
-  }
-}
-
-// Function to log element value on click
-export function logElementValue(element: IElement) {
-  if (element) {
-    console.log('Clicked element value:', element.value)
-    console.log('Clicked element:', element)
   }
 }
 
@@ -133,7 +133,12 @@ export function mousedown(evt: MouseEvent, host: CanvasEvent) {
   
   // Log the clicked element value
   if (curElement) {
-    logElementValue(curElement)
+    // Check if there's a patched version of logElementValue
+    if ((draw as any)._patchedLogElementValue) {
+      (draw as any)._patchedLogElementValue(curElement);
+    } else {
+      logElementValue(curElement);
+    }
   }
   
   // 绘制

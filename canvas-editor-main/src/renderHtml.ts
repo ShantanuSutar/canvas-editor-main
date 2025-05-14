@@ -2,7 +2,6 @@ import {
   ElementType,
   ControlType,
   ListType,
-  TitleLevel,
   IElement
 } from './editor'
 

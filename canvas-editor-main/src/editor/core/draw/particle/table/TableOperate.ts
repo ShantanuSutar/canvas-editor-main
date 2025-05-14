@@ -52,11 +52,6 @@ export class TableOperate {
     // colgroup
     const colgroup: IColgroup[] = []
     
-    // Calculate column width to fit within available width
-    const colWidth = Math.min(
-      this.options.table.defaultColMinWidth,
-      innerWidth / col
-    )
     
     // If all columns at min width would exceed canvas width, adjust column width
     const totalWidth = this.options.table.defaultColMinWidth * col

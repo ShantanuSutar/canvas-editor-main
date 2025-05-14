@@ -68,6 +68,15 @@ window.onload = function () {
   // cypress使用
   Reflect.set(window, 'editor', instance)
 
+  // Get access to the editor reference
+  const editorRef = instance.editorRef;
+  
+  // Register a click handler to demonstrate the functionality
+  // This just logs to console and doesn't add UI elements
+  editorRef.registerElementClickHandler((element) => {
+    console.log('Element clicked:', element);
+  });
+
   // 菜单弹窗销毁
   window.addEventListener(
     'click',

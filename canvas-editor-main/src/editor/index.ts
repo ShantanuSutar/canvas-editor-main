@@ -69,6 +69,7 @@ import { mergeOption } from './utils/option'
 import { LineNumberType } from './dataset/enum/LineNumber'
 import { AreaMode } from './dataset/enum/Area'
 import { IBadge } from './interface/Badge'
+import createEditorRef, { EditorRef, IEditorRef } from '../export/editor-ref'
 
 export default class Editor {
   public command: Command
@@ -78,6 +79,7 @@ export default class Editor {
   public register: Register
   public destroy: () => void
   public use: UsePlugin
+  public editorRef: EditorRef
 
   constructor(
     container: HTMLDivElement,
@@ -152,6 +154,8 @@ export default class Editor {
     // 插件
     const plugin = new Plugin(this)
     this.use = plugin.use.bind(plugin)
+    // Create editor reference
+    this.editorRef = createEditorRef(draw)
   }
 }
 
@@ -160,8 +164,12 @@ export {
   splitText,
   createDomFromElementList,
   getElementListByHTML,
-  getTextFromElementList
+  getTextFromElementList,
+  createEditorRef
 }
+
+// 对外类型
+export type { EditorRef, IEditorRef }
 
 // 对外常量
 export {

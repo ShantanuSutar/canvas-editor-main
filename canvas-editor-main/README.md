@@ -101,3 +101,37 @@ new Editor(document.querySelector('.canvas-editor'), {
 #### lib
 
 `npm run lib`
+
+## Getting Clicked Element Content
+
+You can access the last clicked element content using the editor reference:
+
+```javascript
+// Initialize the editor
+const container = document.getElementById('editor');
+const editor = new Editor(container, data, options);
+
+// Access the editor reference
+const editorRef = editor.editorRef;
+
+// Method 1: Get the last clicked element directly
+const element = editorRef.getLastClickedElement();
+if (element) {
+  console.log('Last clicked element value:', element.value);
+  console.log('Last clicked element:', element);
+}
+
+// Method 2: Register a click handler to be notified when an element is clicked
+const unregister = editorRef.registerElementClickHandler((element) => {
+  console.log('Element clicked:', element);
+  console.log('Element value:', element.value);
+  // Do something with the element...
+});
+
+// To stop listening for clicks
+// unregister();
+```
+
+This provides two ways to access clicked element content:
+1. Get the last clicked element at any time using `getLastClickedElement()`
+2. Register a callback function that will be called whenever an element is clicked

@@ -384,7 +384,6 @@ export class TableTool {
     this.container.append(anchorLine)
     this.anchorLine = anchorLine
     // 原始鼠标样式
-    const originCursor = document.body.style.cursor
     this.canvas.style.cursor = 'none'
     document.body.style.cursor = isCol ? 'col-resize' : 'row-resize'
     // 绑定移动事件
